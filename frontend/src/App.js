@@ -9,6 +9,8 @@ import Applications from "./pages/admin/Applications";
 import ContactMessages from "./pages/admin/ContactMessages";
 import Home from "./pages/client/Home";
 import ClientLayout from "./components/client/ClientLayout";
+import About from "./pages/client/About";
+import Therapies from "./pages/client/Therapies";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
           {/* Client Routes wrapped in ClientLayout (with Header and Footer) */}
           <Route element={<ClientLayout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/therapies" element={<Therapies />} />
           </Route>
         </Routes>
       </BrowserRouter>

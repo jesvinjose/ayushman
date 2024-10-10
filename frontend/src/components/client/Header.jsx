@@ -34,7 +34,7 @@ const Header = () => {
               {/* <a href="/treatment" className="mr-1">
                 Treatments
               </a> */}
-              <Link to="/treatments">Treatments</Link>
+              <Link to="/therapies">Treatments</Link>
               <span>
                 <img src={dropdownArrow} alt="arrow" />
               </span>

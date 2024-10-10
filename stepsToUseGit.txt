@@ -13,6 +13,26 @@ make the first commit to main: git commit -m "Initial commit"
 create main branch: git branch -M main
 push to the main branch: git push -u origin main
 
-create new branch: git checkout -b jesvins  
+Now to update using different branches follow the below summary:
+
+# Step 1: Create a new branch
+git checkout -b feature-branch-name
+
+# Step 2: Work on your changes and then stage and commit them
+git add .
+git commit -m "Description of what you've done"
+
+# Step 3: Switch back to the main branch
+git checkout main
+
+# Step 4: Pull the latest changes from the main branch
+git pull origin main
+
+# Step 5: Merge your changes from the feature branch
+git merge feature-branch-name
+
+# Step 6: Push your changes to the remote repository
+git push origin main
+ 
 
  

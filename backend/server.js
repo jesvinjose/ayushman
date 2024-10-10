@@ -2,7 +2,7 @@ const express = require("express");
 const connectDB = require("./db"); // Import the database configuration file
 const app = express();
 require("dotenv").config();
-const port = process.env.PORT || 7000;
+const port = process.env.PORT || 5000;
 const cors = require("cors");
 const bodyParser = require("body-parser");
 connectDB();
@@ -22,18 +22,18 @@ app.use(cors({ origin: true, credentials: true }));
 const path = require("path");
 
 // Serve static files from the public directory
-// app.use("/uploads", express.static(path.join(__dirname, "public", "")));
-
-app.use("/images", express.static(path.join(__dirname, "public/images")));
+app.use("/uploads", express.static(path.join(__dirname, "public", "uploads")));
 
 // Middleware setup
 app.use(express.json());
 
 const adminRoute = require("./routes/adminRoutes");
 const treatmentRoute=require("./routes/treatmentRoutes");
+const consultantRoute=require("./routes/consultantRoutes");
 
 app.use("/api/admin", adminRoute);
 app.use("/api/treatment", treatmentRoute);
+app.use("/api/consultant", consultantRoute);
 
 // Basic route
 app.get("/", (req, res) => {

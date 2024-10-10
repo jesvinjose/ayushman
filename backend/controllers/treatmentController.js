@@ -4,6 +4,9 @@ const addTreatment = async (req, res) => {
   try {
     const { name, description } = req.body;
 
+    // Log req.file to check if the file is being uploaded
+    // console.log("Uploaded file details:", req.file);
+
     // Check if an image file was uploaded
     if (!req.file) {
       return res.status(400).json({ message: "Image is required." });
@@ -11,6 +14,8 @@ const addTreatment = async (req, res) => {
 
     // Extract the image path from the file object
     const imagePath = req.file.path;
+
+    // console.log("Image path:", imagePath);
 
     const newTreatment = new Treatment({
       name,
@@ -91,6 +96,10 @@ const updateTreatment = async (req, res) => {
     if (req.file) {
       const imagePath = req.file.path;
       updatedData.image = imagePath; // Update with the new image path
+
+      // Log req.file to check if the file is being uploaded
+    //   console.log("Uploaded file details:", req.file);
+    //   console.log("Image path:", imagePath);
     }
 
     // Update the consultant details

@@ -20,7 +20,7 @@ const TreatmentTable = () => {
     const fetchTreatments = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/treatment/gettreatments"
+          "http://localhost:4000/api/treatment/gettreatments"
         );
         setTreatments(response.data);
       } catch (error) {
@@ -45,7 +45,7 @@ const TreatmentTable = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/treatment/addtreatment",
+          "http://localhost:4000/api/treatment/addtreatment",
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -72,7 +72,7 @@ const TreatmentTable = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:5000/api/treatment/deletetreatment/${id}`
+        `http://localhost:4000/api/treatment/deletetreatment/${id}`
       );
       setTreatments(treatments.filter((treatment) => treatment._id !== id));
     } catch (error) {
@@ -106,7 +106,7 @@ const TreatmentTable = () => {
           formData.append("image", newTreatmentImage);
         }
         const response = await axios.put(
-          `http://localhost:5000/api/treatment/updatetreatment/${currentTreatment._id}`,
+          `http://localhost:4000/api/treatment/updatetreatment/${currentTreatment._id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },

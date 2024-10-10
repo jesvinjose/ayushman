@@ -17,15 +17,23 @@ app.use(bodyParser.json({ limit: "1000mb" }));
 app.use(express.urlencoded({ extended: true, limit: "1000mb" }));
 
 // Enable CORS for all routes
-// app.use(cors({ origin: true, credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 
 const path = require("path");
 
 // Serve static files from the public directory
-app.use("/uploads", express.static(path.join(__dirname, "public", "uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "public", "")));
+
+app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 // Middleware setup
 app.use(express.json());
+
+const adminRoute = require("./routes/adminRoutes");
+const treatmentRoute=require("./routes/treatmentRoutes");
+
+app.use("/api/admin", adminRoute);
+app.use("/api/treatment", treatmentRoute);
 
 // Basic route
 app.get("/", (req, res) => {

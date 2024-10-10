@@ -1,11 +1,14 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Treatments from "./pages/Treatments";
-import Login from "./pages/Login";
+import Treatments from "./pages/admin/Treatments";
+import Login from "./pages/admin/Login";
 import Sidebar from "./components/admin/Sidebar";
-import Consultants from "./pages/Consultants";
-import Jobs from "./pages/Jobs";
-import DutyDoctors from "./pages/DutyDoctors";
-import Applications from "./pages/Applications";
+import Consultants from "./pages/admin/Consultants";
+import Jobs from "./pages/admin/Jobs";
+import DutyDoctors from "./pages/admin/DutyDoctors";
+import Applications from "./pages/admin/Applications";
+import ContactMessages from "./pages/admin/ContactMessages";
+import Home from "./pages/client/Home";
+import ClientLayout from "./components/client/ClientLayout";
 
 function App() {
   return (
@@ -19,6 +22,11 @@ function App() {
           <Route path="/jobpostings" element={<Jobs />} />
           <Route path="/duty-doctors" element={<DutyDoctors />} />
           <Route path="/applications" element={<Applications />} />
+          <Route path="/messages" element={<ContactMessages />} />
+          {/* Client Routes wrapped in ClientLayout (with Header and Footer) */}
+          <Route element={<ClientLayout />}>
+            <Route path="/" element={<Home />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>

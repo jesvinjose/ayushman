@@ -33,6 +33,7 @@ const consultantRoute=require("./routes/consultantRoutes");
 const jobRoute=require("./routes/jobRoutes");
 const dutyDoctorRoute=require("./routes/dutyDoctorRoutes");
 const applicationRoute=require("./routes/applicationRoutes");
+const contactMessageRoute=require("./routes/contactMessageRoutes");
 
 app.use("/api/admin", adminRoute);
 app.use("/api/treatment", treatmentRoute);
@@ -40,6 +41,7 @@ app.use("/api/consultant", consultantRoute);
 app.use("/api/job", jobRoute);
 app.use("/api/dutydoctor", dutyDoctorRoute);
 app.use("/api/application", applicationRoute);
+app.use("/api/contactmessage", contactMessageRoute);
 
 // Basic route
 app.get("/", (req, res) => {

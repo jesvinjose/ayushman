@@ -1,3 +1,6 @@
+# node_modules from root folder
+/node_modules
+
 # Node.js (Backend)
 backend/node_modules
 

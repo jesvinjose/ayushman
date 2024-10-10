@@ -1,0 +1,12 @@
+create backend and frontend folder structure
+remove .git folder from frontend since it uses react
+create .gitignore file in root folder and remove .gitignore from backend and frontend folders
+then run npm init -y in the root folder
+then run npm install concurrently --save-dev in the root folder
+configure scripts in the root package.json for running backend and frontend parallely. 
+this will allow us to run npm start from root folder 
+initialize git in the root folder: ayushman here by running git init
+create remote repository in github
+after creating the remote repository, link it to your local Git repository by running: git remote add origin https://github.com/jesvinjose/ayushman.git
+make the first commit to main
+create new branch 

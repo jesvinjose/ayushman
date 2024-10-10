@@ -11,6 +11,9 @@ import Home from "./pages/client/Home";
 import ClientLayout from "./components/client/ClientLayout";
 import About from "./pages/client/About";
 import Therapies from "./pages/client/Therapies";
+import Doctors from "./pages/client/Doctors";
+import Career from "./pages/client/Career";
+import Contact from "./pages/client/Contact";
 
 function App() {
   return (
@@ -30,6 +33,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/therapies" element={<Therapies />} />
+            <Route path="/doctors" element={<Doctors />} />
+            <Route path="/career" element={<Career />} />
+            <Route path="/contact" element={<Contact />} />
           </Route>
         </Routes>
       </BrowserRouter>

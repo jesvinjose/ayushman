@@ -14,6 +14,8 @@ import Therapies from "./pages/client/Therapies";
 import Doctors from "./pages/client/Doctors";
 import Career from "./pages/client/Career";
 import Contact from "./pages/client/Contact";
+import Booking from "./pages/client/Booking";
+import SingleTherapy from "./pages/client/SingleTherapy";
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
             <Route path="/doctors" element={<Doctors />} />
             <Route path="/career" element={<Career />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/readmore" element={<SingleTherapy/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

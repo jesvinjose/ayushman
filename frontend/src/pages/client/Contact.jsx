@@ -1,14 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import contactBg from "../../assets/images/png/contact-us-bg.png";
 import greenLeaves from "../../assets/images/png/leaf.webp";
-import indiraNagar from "../../assets/images/png/INDIRANAGAR-preview.webp";
 import map from "../../assets/images/png/map.svg";
-import nandiHills from "../../assets/images/png/all_around_card_img-preview.webp";
-import kasthuriNagar from "../../assets/images/png/KASTHURI-NAGAR-preview.webp";
-import babusaPalya from "../../assets/images/png/Babusapalya-preview.webp";
-import kalyanNagar from "../../assets/images/png/KALYAN-NAGAR-preview.webp";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ImageHelper from "../../services/helper";
 
 function Contact() {
   const [messageData, setMessageData] = useState({
@@ -18,6 +14,8 @@ function Contact() {
     mobile: "",
     message: "",
   });
+
+  const [branch, setBranch] = useState([]);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -66,6 +64,21 @@ function Contact() {
       }
     }
   };
+
+  // Fetch branch data from API
+  useEffect(() => {
+    const fetchBranch = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/branch/getbranch"
+        );
+        setBranch(response.data);
+      } catch (error) {
+        console.error("Error fetching branches:", error);
+      }
+    };
+    fetchBranch();
+  }, []);
 
   return (
     <>
@@ -255,176 +268,50 @@ function Contact() {
           >
             We are all around
           </h2>
-          <p style={{ textAlign: "center", marginBottom: "30px" }}>
-            We are present at 13 prime locations around Karnataka
-          </p>
+          {branch.length > 1 ? (
+            <p style={{ textAlign: "center", marginBottom: "30px" }}>
+              We are currently present at {branch.length} prime locations around
+              Karnataka.
+            </p>
+          ) : (
+            <p style={{ textAlign: "center", marginBottom: "30px" }}>
+              We are currently present at 1 location.
+            </p>
+          )}
 
-          <ul className="flex flex-wrap justify-center md:justify-between gap-6 mb-[80px]">
-            {/* Card 1 */}
-            <li className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5">
-              <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
-                <div className="relative">
-                  <img src={kasthuriNagar} alt="KASTURI NAGAR" />
-                  <div className="absolute inset-0"></div>
-                </div>
-                <div className="p-4 text-center">
-                  <h5>KASTURI NAGAR</h5>
-                  <p>+91 80423 51313</p>
-                </div>
-              </div>
-              <Link
-                className="block mt-2 text-center"
-                target="_blank"
-                to="https://g.page/r/CZL4gJ4KkqoEEAI/review"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "5px",
-                }}
+          <ul className="flex flex-wrap justify-center md:justify-around gap-6 mb-[80px]">
+            {branch.map((b) => (
+              <li
+                key={b.id}
+                className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5"
               >
-                <span>
-                  <img src={map} alt="Map" />
-                </span>
-              </Link>
-            </li>
-
-            {/* Repeat for other cards */}
-            <li className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5">
-              <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
-                <div className="relative">
-                  <img src={indiraNagar} alt="INDIRANAGAR" />
-                  <div className="absolute inset-0"></div>
+                <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
+                  <div className="relative">
+                    {/* <img src={kasthuriNagar} alt="KASTURI NAGAR" /> */}
+                    <ImageHelper size="300px" image={b.image} />
+                    <div className="absolute inset-0"></div>
+                  </div>
+                  <div className="p-4 text-center">
+                    <h5>{b.place}</h5>
+                    <p>+91 {b.mobile}</p>
+                  </div>
                 </div>
-                <div className="p-4 text-center">
-                  <h5>INDIRANAGAR</h5>
-                  <p>+91 80500 14770</p>
-                </div>
-              </div>
-              <Link
-                className="block mt-2 text-center"
-                target="_blank"
-                to="https://g.page/r/CZL4gJ4KkqoEEAI/review"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "5px",
-                }}
-              >
-                <span>
-                  <img src={map} alt="Map" />
-                </span>
-              </Link>
-            </li>
-
-            <li className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5">
-              <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
-                <div className="relative">
-                  <img src={nandiHills} alt="NANDI HILLS" />
-                  <div className="absolute inset-0"></div>
-                </div>
-                <div className="p-4 text-center">
-                  <h5>NANDI HILLS</h5>
-                  <p>+91 95138 88668</p>
-                </div>
-              </div>
-              <Link
-                className="block mt-2 text-center"
-                target="_blank"
-                to="https://g.page/r/CZL4gJ4KkqoEEAI/review"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "5px",
-                }}
-              >
-                <span>
-                  <img src={map} alt="Map" />
-                </span>
-              </Link>
-            </li>
-
-            <li className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5">
-              <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
-                <div className="relative">
-                  <img src={kasthuriNagar} alt="KASTHURI NAGAR" />
-                  <div className="absolute inset-0"></div>
-                </div>
-                <div className="p-4 text-center">
-                  <h5>KASTHURI NAGAR</h5>
-                  <p>+91 8042351313</p>
-                </div>
-              </div>
-              <Link
-                className="block mt-2 text-center"
-                target="_blank"
-                to="https://g.page/r/CZL4gJ4KkqoEEAI/review"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "5px",
-                }}
-              >
-                <span>
-                  <img src={map} alt="Map" />
-                </span>
-              </Link>
-            </li>
-
-            <li className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5">
-              <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
-                <div className="relative">
-                  <img src={kalyanNagar} alt="KALYAN NAGAR" />
-                  <div className="absolute inset-0"></div>
-                </div>
-                <div className="p-4 text-center">
-                  <h5>KALYAN NAGAR</h5>
-                  <p>+91 87227 58684</p>
-                </div>
-              </div>
-              <Link
-                className="block mt-2 text-center"
-                target="_blank"
-                href="https://g.page/r/CZL4gJ4KkqoEEAI/review"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "5px",
-                }}
-              >
-                <span>
-                  <img src={map} alt="Map" />
-                </span>
-              </Link>
-            </li>
-
-            <li className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5">
-              <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
-                <div className="relative">
-                  <img src={babusaPalya} alt="BABUSAPALAYA" />
-                  <div className="absolute inset-0"></div>
-                </div>
-                <div className="p-4 text-center">
-                  <h5>BABUSAPALAYA</h5>
-                  <p>+91 95381 61313</p>
-                </div>
-              </div>
-              <Link
-                className="block mt-2 text-center"
-                target="_blank"
-                to="https://g.page/r/CZL4gJ4KkqoEEAI/review"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "5px",
-                }}
-              >
-                <span>
-                  <img src={map} alt="Map" />
-                </span>
-              </Link>
-            </li>
-
-            {/* Add similar cards for the rest */}
+                <Link
+                  className="block mt-2 text-center"
+                  target="_blank"
+                  to={`https://maps.google.com/?q=${b.latitude},${b.longitude}`}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "5px",
+                  }}
+                >
+                  <span>
+                    <img src={map} alt="Map" />
+                  </span>
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

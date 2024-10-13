@@ -16,6 +16,7 @@ import Career from "./pages/client/Career";
 import Contact from "./pages/client/Contact";
 import Booking from "./pages/client/Booking";
 import SingleTherapy from "./pages/client/SingleTherapy";
+import Branches from "./pages/admin/Branches";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/duty-doctors" element={<DutyDoctors />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/messages" element={<ContactMessages />} />
+          <Route path="/branches" element={<Branches/>}/>   
           {/* Client Routes wrapped in ClientLayout (with Header and Footer) */}
           <Route element={<ClientLayout />}>
             <Route path="/" element={<Home />} />

@@ -330,7 +330,7 @@ function Home() {
             </li>
           </ul>
           <div className="text-center mt-8">
-            <Link to="/treatments">
+            <Link to="/therapies">
               <button className="bg-green-600 text-white py-2 px-4 rounded-full hover:bg-green-700">
                 View all Treatments
               </button>

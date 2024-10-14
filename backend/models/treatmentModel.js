@@ -5,6 +5,10 @@ const treatmentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  bigImage:{
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -14,6 +18,10 @@ const treatmentSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  bigDescription:{
+    type:String,
+    required: true
+  }
 }, {
   timestamps: true // Automatically creates `createdAt` and `updatedAt` fields
 });

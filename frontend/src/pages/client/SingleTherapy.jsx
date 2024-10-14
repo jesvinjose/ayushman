@@ -1,62 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import greenLeaves from "../../assets/images/png/leaf.webp";
-import Abhyangam from "../../assets/images/png/abhyangam-detail_images_preview.webp";
 import rightArrow from "../../assets/images/png/right-arrow-dark-green.png";
+import { Link, useParams } from "react-router-dom";
+import ImageHelper from "../../services/helper";
+import axios from "axios";
 
 function SingleTherapy() {
-  const treatments = [
-    {
-      name: "Panchakarma",
-      url: "https://www.ayushmanayurvedic.in/treatment/panchakarma",
-    },
-    {
-      name: "Abhyangam",
-      url: "https://www.ayushmanayurvedic.in/treatment/abhyangam",
-      active: true,
-    },
-    {
-      name: "Shirodhara",
-      url: "https://www.ayushmanayurvedic.in/treatment/shirodhara",
-    },
-    {
-      name: "Beauty Therapy",
-      url: "https://www.ayushmanayurvedic.in/treatment/beauty-therapy",
-    },
-    {
-      name: "Pizhichil",
-      url: "https://www.ayushmanayurvedic.in/treatment/pizhichil",
-    },
-    {
-      name: "Njavara Kizhi",
-      url: "https://www.ayushmanayurvedic.in/treatment/njavarakizhi",
-    },
-    { name: "Nasya", url: "https://www.ayushmanayurvedic.in/treatment/nasya" },
-    {
-      name: "Kati Vasti",
-      url: "https://www.ayushmanayurvedic.in/treatment/kativasti",
-    },
-    {
-      name: "Netra Tarpana",
-      url: "https://www.ayushmanayurvedic.in/treatment/netra-tarpana",
-    },
-    {
-      name: "Udvarthanam",
-      url: "https://www.ayushmanayurvedic.in/treatment/udvarthanam",
-    },
-    {
-      name: "Elakizhi",
-      url: "https://www.ayushmanayurvedic.in/treatment/elakizhi",
-    },
-    { name: "Pichu", url: "https://www.ayushmanayurvedic.in/treatment/pichu" },
-    {
-      name: "Yoga Therapy",
-      url: "https://www.ayushmanayurvedic.in/treatment/yoga-therapy",
-    },
-    {
-      name: "Marma Therapy",
-      url: "https://www.ayushmanayurvedic.in/treatment/marma-therapy",
-    },
-  ];
+  const { id } = useParams(); // Get the ID from the URL
+  const [treatment, setTreatment] = useState({});
+
+  useEffect(() => {
+    const fetchTreatment = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4000/api/treatment/getsingletreatment/${id}`
+        );
+        setTreatment(response.data.treatment); // Set the fetched treatment data
+      } catch (error) {
+        console.error("Error fetching treatment:", error);
+      }
+    };
+    if (id) {
+      fetchTreatment(); // Fetch the treatment if ID exists
+    }
+  }, [id]);
+
+  const [treatments, setTreatments] = useState([]);
+
+  useEffect(() => {
+    const fetchTreatments = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/treatment/gettreatments"
+        );
+        console.log(response.data); // Check the structure of the data
+        setTreatments(response.data); // Assuming API returns { treatments: [...] }
+      } catch (error) {
+        console.error("Error fetching treatments:", error);
+      }
+    };
+    fetchTreatments();
+  }, []);
+
+  // Safeguard: If treatment is undefined, return a loading state
+  if (!treatment) {
+    return <div>Loading...</div>; // Or return null, or a loading spinner
+  }
   return (
     <div>
       <div className="max-w-[1380px] mx-auto px-[22px] py-12">
@@ -75,48 +64,25 @@ function SingleTherapy() {
           </h1>
         </div>
         <ul className="flex flex-col md:flex-row w-full">
-          {/* Left Section */}
           <li className="md:w-1/2 mb-8 md:mb-0">
             <div className="panchakarma-short-desc-content p-4">
               <h2
                 className="text-2xl font-bold mb-4"
                 style={{ color: "#3db549" }}
               >
-                Abhyangam
+                {treatment.name}
               </h2>
-              <p className="leading-relaxed text-justify">
-                Complete body oil application with a choice of medicated oils
-                suited for your constitution. It is recommended for
-                musculoskeletal health. This therapy helps tone muscles and
-                removes fatigue, making your body agile. Herbalized steam
-                relaxes the body, reduces tension, and opens the pores and
-                channels of circulation. Performed following Abhyangam, Swedana
-                promotes penetration of the medicinal effects deep into the
-                bodily tissues. Abhyanga has a positive impact on the whole body
-                physically, mentally, and emotionally while balancing the
-                individual doshas. Its rhythmic motion helps to relieve joints
-                and muscles from stiffness and makes all body movements free.
-                This stimulating treatment increases blood circulation, which in
-                turn encourages quick removal of metabolic wastes, while
-                providing relief to diseases such as anxiety, fatigue,
-                circulatory disorders, rheumatic and arthritic problems,
-                backaches, and injuries. Synchronized massage is also beneficial
-                in preventing wrinkles and scales, improving skin texture and
-                complexion, curing spondylitis, sleep disorders, paralysis,
-                improving physical consistency, inducing sound sleep, and
-                increasing the general sense of well-being and life span.
-              </p>
+              <p
+                className="text-gray-700 mt-2"
+                dangerouslySetInnerHTML={{
+                  __html: treatment.bigDescription,
+                }}
+              />
             </div>
           </li>
-
-          {/* Right Section */}
           <li className="md:w-1/2">
             <div className="short-desc-content-img p-4">
-              <img
-                className="w-full h-auto object-cover"
-                src={Abhyangam}
-                alt="Abhyangam Therapy"
-              />
+              <ImageHelper image={treatment.bigImage} size={400} />
             </div>
           </li>
         </ul>
@@ -132,19 +98,22 @@ function SingleTherapy() {
                 } hover:bg-green-900 transition`}
               >
                 <p className="text-lg">
-                  <a
-                    href={treatment.url}
+                  <Link
+                    to={`/treatment/${treatment._id}`}
                     className="text-green-600 hover:underline"
                   >
                     {treatment.name}
-                  </a>
+                  </Link>
                 </p>
                 <span>
-                  <a href={treatment.url}>
+                  <Link
+                    to={`/treatment/${treatment._id}`}
+                    className="text-green-600 hover:underline"
+                  >
                     <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center">
                       <img className="w-4 h-4" src={rightArrow} alt="arrow" />
                     </div>
-                  </a>
+                  </Link>
                 </span>
               </div>
             </li>

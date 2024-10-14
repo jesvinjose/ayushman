@@ -2,25 +2,23 @@ const Treatment = require("../models/treatmentModel");
 
 const addTreatment = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, bigDescription } = req.body;
 
-    // Log req.file to check if the file is being uploaded
-    // console.log("Uploaded file details:", req.file);
-
-    // Check if an image file was uploaded
-    if (!req.file) {
-      return res.status(400).json({ message: "Image is required." });
+    // Check if both images were uploaded
+    if (!req.files || !req.files['image'] || !req.files['bigImage']) {
+      return res.status(400).json({ message: "Both images are required." });
     }
 
-    // Extract the image path from the file object
-    const imagePath = req.file.path;
-
-    // console.log("Image path:", imagePath);
+    // Extract the image paths from the file objects
+    const imagePath = req.files['image'][0].path;
+    const bigImagePath = req.files['bigImage'][0].path;
 
     const newTreatment = new Treatment({
       name,
       description,
+      bigDescription,
       image: imagePath,
+      bigImage: bigImagePath,
     });
 
     // Save the treatment to the database
@@ -37,6 +35,7 @@ const addTreatment = async (req, res) => {
       .json({ message: "Failed to add treatment", error: error.message });
   }
 };
+
 
 const getTreatments = async (req, res) => {
   try {
@@ -77,32 +76,37 @@ const deleteTreatment = async (req, res) => {
 const updateTreatment = async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, description } = req.body;
-    // Fetch the existing treatment to get the current image path
+    const { name, description, bigDescription } = req.body;
+
+    // Fetch the existing treatment to get the current image paths
     const existingTreatment = await Treatment.findById(id);
 
     if (!existingTreatment) {
       return res.status(404).json({ message: "Treatment not found." });
     }
 
-    // Prepare the updated data
+    // Prepare the updated data with existing values as defaults
     let updatedData = {
       name,
       description,
-      image: existingTreatment.image, // Set the existing image by default
+      bigDescription,
+      image: existingTreatment.image, // Default to existing image
+      bigImage: existingTreatment.bigImage, // Default to existing big image
     };
 
-    // Check if a new image file was uploaded
-    if (req.file) {
-      const imagePath = req.file.path;
-      updatedData.image = imagePath; // Update with the new image path
-
-      // Log req.file to check if the file is being uploaded
-    //   console.log("Uploaded file details:", req.file);
-    //   console.log("Image path:", imagePath);
+    // Check if new images were uploaded
+    if (req.files) {
+      if (req.files['image'] && req.files['image'][0]) {
+        const imagePath = req.files['image'][0].path;
+        updatedData.image = imagePath; // Update with new image path
+      }
+      if (req.files['bigImage'] && req.files['bigImage'][0]) {
+        const bigImagePath = req.files['bigImage'][0].path;
+        updatedData.bigImage = bigImagePath; // Update with new big image path
+      }
     }
 
-    // Update the consultant details
+    // Update the treatment details
     const updatedTreatment = await Treatment.findByIdAndUpdate(
       id,
       updatedData,
@@ -121,9 +125,29 @@ const updateTreatment = async (req, res) => {
   }
 };
 
+
+const getSingleTreatment = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const treatment = await Treatment.findById(id);
+    if (!treatment) {
+      return res.status(404).json({ message: "Treatment not found" });
+    }
+    return res.status(200).json({
+      message: "Treatment found successfully",
+      treatment,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Failed to retrieve treatment", error: error.message });
+  }
+};
+
+
 module.exports = {
   addTreatment,
   getTreatments,
   deleteTreatment,
   updateTreatment,
+  getSingleTreatment
 };

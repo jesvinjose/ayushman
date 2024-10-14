@@ -293,7 +293,7 @@ function Home() {
                     />
                     <div className="mt-4">
                       <Link
-                        to={`/readmore/${treatment._id}`} // Dynamic route to read more based on treatment ID
+                        to={`/treatment/${treatment._id}`} // Dynamic route to read more based on treatment ID
                         className="read-more-button-dark text-blue-500 hover:text-blue-700"
                       >
                         Read More
@@ -339,13 +339,12 @@ function Home() {
                       className="w-full md:w-1/2 lg:w-1/3 h-auto text-center rounded-lg overflow-visible border bg-white shadow-lg p-4"
                       key={index}
                     >
-                      {/* Ensure Image is visible */}
-                      <ImageHelper image={doctor.image} size={100} />
-                      {/* Doctor's Name */}
+                      <ImageHelper image={doctor.image} size={200} />
+
                       <h2 className="mt-3 text-black font-semibold">
                         {doctor.name || "Doctor's Name"}
                       </h2>
-                      {/* Doctor's Qualification */}
+
                       <p className="mt-1 text-red-600">
                         {doctor.qualification || "Qualification not available"}
                       </p>
@@ -356,8 +355,6 @@ function Home() {
                 <p>No doctors available to display</p>
               )}
             </div>
-
-            {/* View All Doctors Button */}
             <div className="w-full flex justify-center items-center mt-5">
               <Link
                 to="/doctors"

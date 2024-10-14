@@ -1,12 +1,12 @@
 const express = require("express");
 const treatmentRoute = express.Router();
-const upload = require("../uploadImageConfig");
+const { uploadMultipleImages } = require("../uploadImageConfig");
 const treatmentController = require("../controllers/treatmentController");
-const multer=require('multer');
+const multer = require("multer");
 
 treatmentRoute.post(
   "/addtreatment",
-  upload.single("image"),
+  uploadMultipleImages,
   treatmentController.addTreatment
 );
 
@@ -29,6 +29,11 @@ treatmentRoute.post(
 
 treatmentRoute.get("/gettreatments", treatmentController.getTreatments);
 
+treatmentRoute.get(
+  "/getsingletreatment/:id",
+  treatmentController.getSingleTreatment
+);
+
 treatmentRoute.delete(
   "/deletetreatment/:id",
   treatmentController.deleteTreatment
@@ -36,7 +41,7 @@ treatmentRoute.delete(
 
 treatmentRoute.put(
   "/updatetreatment/:id",
-  upload.single("image"),
+  uploadMultipleImages,
   treatmentController.updateTreatment
 );
 

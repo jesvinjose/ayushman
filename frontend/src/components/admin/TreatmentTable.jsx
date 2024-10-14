@@ -10,7 +10,10 @@ const TreatmentTable = () => {
   const [treatments, setTreatments] = useState([]);
   const [newTreatmentName, setNewTreatmentName] = useState("");
   const [newTreatmentDescription, setNewTreatmentDescription] = useState("");
+  const [newTreatmentBigDescription, setNewTreatmentBigDescription] =
+    useState("");
   const [newTreatmentImage, setNewTreatmentImage] = useState(null);
+  const [newTreatmentBigImage, setNewTreatmentBigImage] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
   const [showEditForm, setShowEditForm] = useState(false); // State to control the visibility of the edit form
@@ -35,13 +38,25 @@ const TreatmentTable = () => {
     setNewTreatmentImage(e.target.files[0]);
   };
 
+  const handleBigImageUpload = (e) => {
+    setNewTreatmentBigImage(e.target.files[0]);
+  };
+
   const handleAddTreatment = async () => {
     // setShowEditForm(false);
-    if (newTreatmentName && newTreatmentDescription && newTreatmentImage) {
+    if (
+      newTreatmentName &&
+      newTreatmentDescription &&
+      newTreatmentBigDescription &&
+      newTreatmentImage &&
+      newTreatmentBigImage
+    ) {
       const formData = new FormData();
       formData.append("name", newTreatmentName);
       formData.append("description", newTreatmentDescription);
       formData.append("image", newTreatmentImage);
+      formData.append("bigImage", newTreatmentBigImage);
+      formData.append("bigDescription", newTreatmentBigDescription);
 
       try {
         const response = await axios.post(
@@ -58,7 +73,9 @@ const TreatmentTable = () => {
           setTreatments([...treatments, addedTreatment]);
           setNewTreatmentName("");
           setNewTreatmentDescription("");
+          setNewTreatmentBigDescription("");
           setNewTreatmentImage(null);
+          setNewTreatmentBigImage(null);
           setShowAddForm(false);
         }
       } catch (error) {
@@ -86,12 +103,14 @@ const TreatmentTable = () => {
     setNewTreatmentName("");
     setNewTreatmentDescription("");
     setNewTreatmentImage(null);
+    setNewTreatmentBigImage(null);
   };
 
   const handleEdit = (treatment) => {
     setCurrentTreatment(treatment); // Set the current treatment to be edited
     setNewTreatmentName(treatment.name); // Initialize with the current name
     setNewTreatmentDescription(treatment.description); // Initialize with the current description
+    setNewTreatmentBigDescription(treatment.bigDescription); // Initialize with the current bigDescription
     setShowEditForm(true); // Show the edit form
     setShowAddForm(false); // Hide the add form if it is open
   };
@@ -102,8 +121,12 @@ const TreatmentTable = () => {
         const formData = new FormData();
         formData.append("name", newTreatmentName);
         formData.append("description", newTreatmentDescription);
+        formData.append("bigDescription", newTreatmentBigDescription);
         if (newTreatmentImage) {
           formData.append("image", newTreatmentImage);
+        }
+        if (newTreatmentBigImage) {
+          formData.append("bigImage", newTreatmentBigImage);
         }
         const response = await axios.put(
           `http://localhost:4000/api/treatment/updatetreatment/${currentTreatment._id}`,
@@ -127,7 +150,9 @@ const TreatmentTable = () => {
           setShowEditForm(false); // Hide the edit form
           setNewTreatmentName("");
           setNewTreatmentDescription("");
+          setNewTreatmentBigDescription("");
           setNewTreatmentImage(null);
+          setNewTreatmentBigImage(null);
         }
       }
     } catch (error) {
@@ -163,9 +188,22 @@ const TreatmentTable = () => {
             className="mb-4"
             placeholder="Enter treatment description..."
           />
+          <ReactQuill
+            value={newTreatmentBigDescription}
+            onChange={setNewTreatmentBigDescription}
+            className="mb-4"
+            placeholder="Enter bigTreatment description..."
+          />
           <input
             type="file"
             onChange={handleImageUpload}
+            className="border p-2 w-full mb-4"
+            accept="image/*"
+          />
+          <label className="block mb-2">Upload Big Image:</label>
+          <input
+            type="file"
+            onChange={handleBigImageUpload}
             className="border p-2 w-full mb-4"
             accept="image/*"
           />
@@ -194,9 +232,23 @@ const TreatmentTable = () => {
             onChange={setNewTreatmentDescription} // Directly use the state setter function
             className="border p-2 w-full mb-4"
           />
+          <ReactQuill
+            value={newTreatmentBigDescription}
+            placeholder={currentTreatment.bigDescription}
+            onChange={setNewTreatmentBigDescription} // Directly use the state setter function
+            className="border p-2 w-full mb-4"
+          />
+          <label className="block mb-2">Upload Image:</label>
           <input
             type="file"
             onChange={handleImageUpload}
+            className="border p-2 w-full mb-4"
+            accept="image/*"
+          />
+          <label className="block mb-2">Upload Big Image:</label>
+          <input
+            type="file"
+            onChange={handleBigImageUpload}
             className="border p-2 w-full mb-4"
             accept="image/*"
           />

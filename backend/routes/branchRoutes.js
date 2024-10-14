@@ -1,11 +1,11 @@
 const express = require("express");
 const branchRoute = express.Router();
-const upload = require("../uploadImageConfig");
+const  { uploadSingleImage } = require("../uploadImageConfig");
 const branchController = require("../controllers/branchController");
 
 branchRoute.post(
   "/addbranch",
-  upload.single("image"),
+  uploadSingleImage,
   branchController.addBranch
 );
 
@@ -15,7 +15,7 @@ branchRoute.delete("/deletebranch/:id", branchController.deleteBranch);
 
 branchRoute.put(
   "/updatebranch/:id",
-  upload.single("image"),
+  uploadSingleImage,
   branchController.updateBranch
 );
 

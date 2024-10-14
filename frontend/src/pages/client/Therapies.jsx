@@ -7,6 +7,8 @@ import axios from "axios";
 function Therapies() {
   const [treatments, setTreatments] = useState([]);
 
+  const [singleTreatment,setSingleTreatment]=useState({});
+
   useEffect(() => {
     const fetchTreatments = async () => {
       try {
@@ -21,6 +23,16 @@ function Therapies() {
     };
     fetchTreatments();
   }, []);
+
+  const getSingleTreatment=async(id)=>{
+    try {
+      const response=axios.get(`http://localhost:4000/api/treatment/getsingletreatment/${id}`);
+      console.log(response.data); // Check the structure of the data
+      setSingleTreatment(response.data); // Assuming API returns { treatments: [...] }
+    } catch (error) {
+      console.error("Error fetching single treatment:", error);
+    }
+  }
 
   return (
     <div className="treatments-bg bg-gray-100">
@@ -62,7 +74,7 @@ function Therapies() {
                     />
                     <div className="mt-4">
                       <Link
-                        to={`/readmore/${treatment._id}`} // Dynamic route to read more based on treatment ID
+                        to={`/treatment/${treatment._id}`} // Dynamic route to read more based on treatment ID
                         className="read-more-button-dark text-blue-500 hover:text-blue-700"
                       >
                         Read More

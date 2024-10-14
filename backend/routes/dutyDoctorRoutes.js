@@ -1,11 +1,11 @@
 const express = require("express");
 const dutyDoctorRoute = express.Router();
-const upload = require("../uploadImageConfig");
+const {uploadSingleImage} = require("../uploadImageConfig");
 const dutyDoctorController = require("../controllers/dutyDoctorController");
 
 dutyDoctorRoute.post(
   "/adddutydoctor",
-  upload.single("image"),
+  uploadSingleImage,
   dutyDoctorController.addDutyDoctor
 );
 
@@ -18,7 +18,7 @@ dutyDoctorRoute.delete(
 
 dutyDoctorRoute.put(
   "/updatedutydoctor/:id",
-  upload.single("image"),
+  uploadSingleImage,
   dutyDoctorController.updateDutyDoctor
 );
 

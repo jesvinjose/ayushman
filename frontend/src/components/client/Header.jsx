@@ -1,20 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dropdownArrow from "../../assets/images/svg/dropdown_arrow.svg";
 import logo from "../../assets/images/svg/logo.svg";
 import hamburgerIcon from "../../assets/images/png/hamburger_icon.png";
 import closeIcon from "../../assets/images/png/close_icon.png";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const [treatments, setTreatments] = useState([]);
+
+  useEffect(() => {
+    const fetchTreatments = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/treatment/gettreatments"
+        );
+        console.log(response.data); // Check the structure of the data
+        setTreatments(response.data); // Assuming API returns { treatments: [...] }
+      } catch (error) {
+        console.error("Error fetching treatments:", error);
+      }
+    };
+    fetchTreatments();
+  }, []);
+
   return (
     <div className="nav-wrapper bg-white shadow-md">
       <div className="nav-wrapper-content flex justify-between items-center p-4">
-        {/* <a href="https://www.ayushmanayurvedic.in">
-          <img src={logo} alt="logo" className="w-24" />
-        </a> */}
         <Link to="/">
           <img src={logo} alt="logo" className="w-24" />
         </Link>
@@ -23,7 +38,6 @@ const Header = () => {
           style={{ alignItems: "center" }}
         >
           <li className="nav-items">
-            {/* <a href="https://www.ayushmanayurvedic.in/about">About</a> */}
             <Link to="/about">About</Link>
           </li>
           <li className="nav-items relative">
@@ -31,104 +45,33 @@ const Header = () => {
               className="treatent-wrapper flex items-center cursor-pointer"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              {/* <a href="/treatment" className="mr-1">
-                Treatments
-              </a> */}
               <Link to="/therapies">Treatments</Link>
               <span>
                 <img src={dropdownArrow} alt="arrow" />
               </span>
             </div>
             {/* Dropdown */}
-            {/* {isDropdownOpen && (
-              <ul className="treatments-dropdown absolute top-10 bg-white shadow-lg p-2 space-y-2">
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/panchakarma">
-                    Panchakarma
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
-                    Abhyangam
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
-                    Abhyangam
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
-                    Abhyangam
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
-                    Abhyangam
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
-                    Abhyangam
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
-                    Abhyangam
-                  </a>
-                </li>
-              </ul>
-            )} */}
             {isDropdownOpen && (
               <ul className="treatments-dropdown absolute top-10 bg-white shadow-lg p-4 grid grid-cols-2 gap-4 w-[500px]">
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/panchakarma">
-                    Panchakarma
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
-                    Abhyangam
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/shirodhara">
-                    Shirodhara
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/beauty-therapy">
-                    Beauty Therapy
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/pizhichil">
-                    Pizhichil
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/njavarakizhi">
-                    Njavara Kizhi
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.ayushmanayurvedic.in/treatment/nasya">
-                    Nasya
-                  </a>
-                </li>
+                {treatments.map((treatment) => {
+                  return (
+                    <li>
+                      <Link to={`/treatment/${treatment._id}`}>
+                        {treatment.name}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </li>
           <li className="nav-items">
-            {/* <a href="https://www.ayushmanayurvedic.in/doctors">Doctors</a> */}
             <Link to="/doctors">Doctors</Link>
           </li>
           <li className="nav-items">
-            {/* <a href="https://www.ayushmanayurvedic.in/career">Career</a> */}
             <Link to="/career">Career</Link>
           </li>
           <li className="nav-items">
-            {/* <a href="https://www.ayushmanayurvedic.in/contact-us">Contact</a> */}
             <Link to="/contact">Contact</Link>
           </li>
           <li className="nav-items">
@@ -178,57 +121,25 @@ const Header = () => {
                 </div>
                 {isDropdownOpen && (
                   <ul className="treatments-dropdown-mob bg-gray-100 p-2">
-                    <li>
-                      <a href="https://www.ayushmanayurvedic.in/treatment/panchakarma">
-                        Panchakarma
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
-                        Abhyangam
-                      </a>
-                    </li>
-                    {/* Add other treatments */}
-                    <li>
-                      <a href="https://www.ayushmanayurvedic.in/treatment/shirodhara">
-                        Shirodhara
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://www.ayushmanayurvedic.in/treatment/beauty-therapy">
-                        Beauty Therapy
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://www.ayushmanayurvedic.in/treatment/pizhichil">
-                        Pizhichil
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://www.ayushmanayurvedic.in/treatment/njavarakizhi">
-                        Njavara Kizhi
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://www.ayushmanayurvedic.in/treatment/nasya">
-                        Nasya
-                      </a>
-                    </li>
+                    {treatments.map((treatment) => {
+                      return (
+                        <li>
+                          <Link to={`/treatment/${treatment._id}`}>
+                            {treatment.name}
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
                 )}
               </li>
               <li className="nav-items-mob">
-                {/* <a href="https://www.ayushmanayurvedic.in/doctors">Doctors</a> */}
                 <Link to="/doctors">Doctors</Link>
               </li>
               <li className="nav-items-mob">
-                {/* <a href="https://www.ayushmanayurvedic.in/career">Career</a> */}
                 <Link to="/career">Career</Link>
               </li>
               <li className="nav-items-mob">
-                {/* <a href="https://www.ayushmanayurvedic.in/contact-us">
-                  Contact
-                </a> */}
                 <Link to="/contact">Contact</Link>
               </li>
               <li className="nav-items-mob">

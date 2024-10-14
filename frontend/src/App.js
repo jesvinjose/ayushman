@@ -41,7 +41,7 @@ function App() {
             <Route path="/career" element={<Career />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/booking" element={<Booking />} />
-            <Route path="/readmore" element={<SingleTherapy/>}/>
+            <Route path="/treatment/:id" element={<SingleTherapy />} />
           </Route>
         </Routes>
       </BrowserRouter>

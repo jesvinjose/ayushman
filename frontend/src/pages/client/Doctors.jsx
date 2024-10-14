@@ -77,9 +77,7 @@ function Doctors() {
                     <ImageHelper size="300px" image={consultant.image} />
                   </div>
                   <div className="doctor-details flex flex-col items-center">
-                    {/* <h6 className="mt-2 text-lg">Dr. K C Balram</h6> */}
                     <h6 className="mt-10 text-lg">{consultant.name}</h6>
-                    {/* <p className="text-sm">BAMS</p> */}
                     <p className="text-sm">{consultant.qualification}</p>
                   </div>
                 </div>
@@ -98,17 +96,10 @@ function Doctors() {
             {dutyDoctors.map((doctor) => (
               <div className="doctors-main-wrapper">
                 <div className="doctors-img w-full aspect-square rounded-lg">
-                  {/* <img
-                    className="object-cover w-full rounded-lg bg-gray-300"
-                    src={doctorOne}
-                    alt="doctor"
-                  /> */}
                   <ImageHelper size="300px" image={doctor.image} />
                 </div>
                 <div className="doctor-details text-center mt-4">
-                  {/* <h6 className="font-semibold">Dr. Keerthana</h6> */}
                   <h6 className="text-lg">{doctor.name}</h6>
-                  {/* <p className="text-gray-600">BAMS</p> */}
                   <p className="text-sm">{doctor.qualification}</p>
                 </div>
               </div>

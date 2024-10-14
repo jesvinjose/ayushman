@@ -40,7 +40,7 @@ const Header = () => {
               </span>
             </div>
             {/* Dropdown */}
-            {isDropdownOpen && (
+            {/* {isDropdownOpen && (
               <ul className="treatments-dropdown absolute top-10 bg-white shadow-lg p-2 space-y-2">
                 <li>
                   <a href="https://www.ayushmanayurvedic.in/treatment/panchakarma">
@@ -52,7 +52,70 @@ const Header = () => {
                     Abhyangam
                   </a>
                 </li>
-                {/* Add other treatments */}
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
+                    Abhyangam
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
+                    Abhyangam
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
+                    Abhyangam
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
+                    Abhyangam
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
+                    Abhyangam
+                  </a>
+                </li>
+              </ul>
+            )} */}
+            {isDropdownOpen && (
+              <ul className="treatments-dropdown absolute top-10 bg-white shadow-lg p-4 grid grid-cols-2 gap-4 w-[500px]">
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/panchakarma">
+                    Panchakarma
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/abhyangam">
+                    Abhyangam
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/shirodhara">
+                    Shirodhara
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/beauty-therapy">
+                    Beauty Therapy
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/pizhichil">
+                    Pizhichil
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/njavarakizhi">
+                    Njavara Kizhi
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.ayushmanayurvedic.in/treatment/nasya">
+                    Nasya
+                  </a>
+                </li>
               </ul>
             )}
           </li>
@@ -126,6 +189,31 @@ const Header = () => {
                       </a>
                     </li>
                     {/* Add other treatments */}
+                    <li>
+                      <a href="https://www.ayushmanayurvedic.in/treatment/shirodhara">
+                        Shirodhara
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://www.ayushmanayurvedic.in/treatment/beauty-therapy">
+                        Beauty Therapy
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://www.ayushmanayurvedic.in/treatment/pizhichil">
+                        Pizhichil
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://www.ayushmanayurvedic.in/treatment/njavarakizhi">
+                        Njavara Kizhi
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://www.ayushmanayurvedic.in/treatment/nasya">
+                        Nasya
+                      </a>
+                    </li>
                   </ul>
                 )}
               </li>
@@ -145,7 +233,7 @@ const Header = () => {
               </li>
               <li className="nav-items-mob">
                 <button className="book-appoinment-btn bg-blue-500 text-white px-4 py-2 rounded-md">
-                <Link to="/booking">Book Appointment</Link>
+                  <Link to="/booking">Book Appointment</Link>
                 </button>
               </li>
             </ul>

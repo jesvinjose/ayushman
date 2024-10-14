@@ -233,12 +233,6 @@ const DutyDoctorsTable = () => {
           {doctors.map((doctor) => (
             <tr key={doctor._id}>
               <td className="border px-4 py-2">
-                {/* <img
-                  // src={doctor.image}
-                  src={`/admin-backend/${doctor.image}`} // Ensure this path is correct
-                  alt={doctor.name}
-                  className="h-16 w-16 object-cover rounded-full"
-                /> */}
                 <ImageHelper size="200px" image={doctor.image} />
               </td>
               <td className="border px-4 py-2">{doctor.name}</td>

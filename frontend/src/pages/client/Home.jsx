@@ -1,34 +1,28 @@
 import React, { useEffect, useState } from "react";
 import hero from "../../assets/images/png/hero.jpg";
-import abhyangam from "../../assets/images/png/abhyangam-preview.webp";
-import panchakarma from "../../assets/images/png/panchakarma-preview.webp";
-import shirodhara from "../../assets/images/png/shirodhara-preview.webp";
-import beautyTherapy from "../../assets/images/png/beauty-therapy-preview.webp";
 import { Link } from "react-router-dom";
 import play_button from "../../assets/images/png/play_button.png";
 import video_image from "../../assets/images/png/video_image.png";
 import wellness from "../../assets/images/jpg/wellness.jpg";
-import hospital from "../../assets/images/jpg/hospital.jpg";
-import institute from "../../assets/images/jpg/institute.jpg";
+// import hospital from "../../assets/images/jpg/hospital.jpg";
+// import institute from "../../assets/images/jpg/institute.jpg";
 
 import doctorsImg from "../../assets/images/png/ayur_doctors_img_main.png";
-import doctorOne from "../../assets/images/png/D_Kerrthana_BAMS-preview.webp";
-import doctorTwo from "../../assets/images/png/Dr_Mruthula_M_BAMS-preview.webp";
 
-import bookingBg from "../../assets/images/png/book_appointment_modal_bg.svg"
+import bookingBg from "../../assets/images/png/book_appointment_modal_bg.svg";
 import bookingBgMob from "../../assets/images/png/book_appointment_bg_mob_one.png";
 
 import franchiseBg from "../../assets/images/png/franchise_bg.png";
 import franchiseBgMob from "../../assets/images/png/franchise_bg_mob.svg";
 
-import indiraNagar from "../../assets/images/png/INDIRANAGAR-preview.webp";
 import map from "../../assets/images/png/map.svg";
-import nandiHills from "../../assets/images/png/all_around_card_img-preview.webp";
-import kasthuriNagar from "../../assets/images/png/KASTHURI-NAGAR-preview.webp";
 
 import testimonialOne from "../../assets/images/png/testimonialOne.webp";
 import testimonialTwo from "../../assets/images/png/testimonialTwo.webp";
 import testimonialThree from "../../assets/images/png/testimonialThree.webp";
+
+import axios from "axios";
+import ImageHelper from "../../services/helper";
 
 function Home() {
   const [backgroundImage, setBackgroundImage] = useState(bookingBg);
@@ -58,6 +52,69 @@ function Home() {
       window.removeEventListener("resize", updateBackgroundImage);
     };
   }, []);
+
+  const [treatments, setTreatments] = useState([]);
+  const [dutyDoctors, setDutyDoctors] = useState([]);
+  const [branch, setBranch] = useState([]);
+
+  useEffect(() => {
+    const fetchTreatments = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/treatment/gettreatments"
+        );
+        console.log(response.data); // Check the structure of the data
+        setTreatments(response.data); // Assuming API returns { treatments: [...] }
+      } catch (error) {
+        console.error("Error fetching treatments:", error);
+      }
+    };
+    fetchTreatments();
+  }, []);
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/dutydoctor/getdutydoctors"
+        );
+        console.log(response.data); // Check the structure of the data
+        setDutyDoctors(response.data); // Assuming API returns { dutyDoctors: [...] }
+      } catch (error) {
+        console.error("Error fetching duty doctors:", error);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
+
+  // Fetch branch data from API
+  useEffect(() => {
+    const fetchBranch = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/branch/getbranch"
+        );
+        setBranch(response.data);
+      } catch (error) {
+        console.error("Error fetching branches:", error);
+      }
+    };
+    fetchBranch();
+  }, []);
+
+  // Show only 1/3 of the total treatments
+  const treatmentsToShow = treatments.slice(
+    0,
+    Math.floor(treatments.length / 3)
+  );
+
+  // Show only 2 of the total doctors
+  const doctorsToShow = dutyDoctors.slice(0, 2);
+
+  // Show only 1/2 of the total branches
+  const branchesToShow = branch.slice(0, Math.floor(branch.length / 2));
+
   return (
     <div>
       <div
@@ -72,9 +129,9 @@ function Home() {
 
       <div className="max-w-[1106px] px-[22px] mx-auto flex flex-col md:flex-row justify-center items-center gap-[20px] md:gap-[50px] mt-[-110px] z-[10] relative">
         {/* Wellness Card */}
-        <div className="flex-1 z-[11] w-full md:w-auto">
+        <div className="flex-1 z-[11] w-full md:w-auto flex justify-center items-center">
           <div
-            className="flex flex-col rounded-[34px] border-2 border-[#3DB549] md:border-[#F1F1F1] border-solid w-full bg-[#F1F1F1] p-2"
+            className="flex flex-col rounded-[34px] border-2 border-[#3DB549] md:border-[#F1F1F1] border-solid w-1/3 bg-[#F1F1F1] p-2 mx-auto"
             style={{
               filter: "drop-shadow(30px 30px 10px rgba(61, 181, 73, 0.3))",
             }}
@@ -96,7 +153,7 @@ function Home() {
         </div>
 
         {/* Hospital Card */}
-        <div className="flex-1 z-[12] w-full md:w-auto">
+        {/* <div className="flex-1 z-[12] w-full md:w-auto">
           <div
             className="flex flex-col rounded-[34px] border-2 border-[#F1F1F1] border-solid w-full bg-[#F1F1F1] p-2"
             style={{ filter: "drop-shadow(30px 30px 10px rgba(0, 0, 0, 0.1))" }}
@@ -123,10 +180,10 @@ function Home() {
               Read More
             </a>
           </div>
-        </div>
+        </div> */}
 
         {/* Institute Card */}
-        <div className="flex-1 z-[13] w-full md:w-auto">
+        {/* <div className="flex-1 z-[13] w-full md:w-auto">
           <div
             className="flex flex-col rounded-[34px] border-2 border-[#F1F1F1] border-solid w-full bg-[#F1F1F1] p-2"
             style={{ filter: "drop-shadow(30px 30px 10px rgba(0, 0, 0, 0.1))" }}
@@ -153,7 +210,7 @@ function Home() {
               Read More
             </a>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="border border-brown mx-auto">
@@ -220,114 +277,32 @@ function Home() {
             revitalize your body, mind, and spirit.
           </p>
           <ul className="treatment-card-wrapper grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-            <li>
-              <div className="treatment-card-container bg-white rounded-lg shadow-lg p-4">
-                <span className="block mb-4">
-                  <img
-                    className="w-full h-40 object-cover rounded-lg"
-                    src={panchakarma}
-                    alt="Panchakarma"
-                  />
-                </span>
-                <div className="treatment-card-content">
-                  <h6 className="text-xl font-semibold">Panchakarma</h6>
-                  <p className="text-gray-700 mt-2">
-                    This five-fold purification therapy aims at correcting the
-                    imbalance of the doshas - Vata, Pitta, Kapha in order to
-                    maintain their inherent equilibrium.
-                  </p>
-                  <div className="mt-4">
-                    <a
-                      href="https://www.ayushmanayurvedic.in/treatment/panchakarma"
-                      className="read-more-button-dark text-blue-500 hover:text-blue-700"
-                    >
-                      Read More
-                    </a>
+            {treatmentsToShow.map((treatment, index) => (
+              <li key={index}>
+                <div className="treatment-card-container bg-white rounded-lg shadow-lg p-4">
+                  <span className="block mb-4">
+                    <ImageHelper image={treatment.image} size={200} />
+                  </span>
+                  <div className="treatment-card-content">
+                    <h6 className="text-xl font-semibold">{treatment.title}</h6>
+                    <p
+                      className="text-gray-700 mt-2"
+                      dangerouslySetInnerHTML={{
+                        __html: treatment.description,
+                      }}
+                    />
+                    <div className="mt-4">
+                      <Link
+                        to={`/readmore/${treatment._id}`} // Dynamic route to read more based on treatment ID
+                        className="read-more-button-dark text-blue-500 hover:text-blue-700"
+                      >
+                        Read More
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
-            <li>
-              <div className="treatment-card-container bg-white rounded-lg shadow-lg p-4">
-                <span className="block mb-4">
-                  <img
-                    className="w-full h-40 object-cover rounded-lg"
-                    src={abhyangam}
-                    alt="Abhyangam"
-                  />
-                </span>
-                <div className="treatment-card-content">
-                  <h6 className="text-xl font-semibold">Abhyangam</h6>
-                  <p className="text-gray-700 mt-2">
-                    This stimulating treatment with complete body oil
-                    application increases blood circulation and revitalizes the
-                    body.
-                  </p>
-                  <div className="mt-4">
-                    <a
-                      href="https://www.ayushmanayurvedic.in/treatment/abhyangam"
-                      className="read-more-button-dark text-blue-500 hover:text-blue-700"
-                    >
-                      Read More
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div className="treatment-card-container bg-white rounded-lg shadow-lg p-4">
-                <span className="block mb-4">
-                  <img
-                    className="w-full h-40 object-cover rounded-lg"
-                    src={shirodhara}
-                    alt="Shirodhara"
-                  />
-                </span>
-                <div className="treatment-card-content">
-                  <h6 className="text-xl font-semibold">Shirodhara</h6>
-                  <p className="text-gray-700 mt-2">
-                    This one-of-a-kind therapy induces a relaxed state by
-                    dripping medicated oil on the forehead to soothe the body as
-                    well as the mind.
-                  </p>
-                  <div className="mt-4">
-                    <a
-                      href="https://www.ayushmanayurvedic.in/treatment/shirodhara"
-                      className="read-more-button-dark text-blue-500 hover:text-blue-700"
-                    >
-                      Read More
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li>
-              <div className="treatment-card-container bg-white rounded-lg shadow-lg p-4">
-                <span className="block mb-4">
-                  <img
-                    className="w-full h-40 object-cover rounded-lg"
-                    src={beautyTherapy}
-                    alt="Beauty Therapy"
-                  />
-                </span>
-                <div className="treatment-card-content">
-                  <h6 className="text-xl font-semibold">Beauty Therapy</h6>
-                  <p className="text-gray-700 mt-2">
-                    Ayurvedic beauty therapy follows the ancient methods of
-                    beauty enhancement. It rejuvenates the skin and brings about
-                    a healthy glow.
-                  </p>
-                  <div className="mt-4">
-                    <a
-                      href="https://www.ayushmanayurvedic.in/treatment/beauty-therapy"
-                      className="read-more-button-dark text-blue-500 hover:text-blue-700"
-                    >
-                      Read More
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </li>
+              </li>
+            ))}
           </ul>
           <div className="text-center mt-8">
             <Link to="/therapies">
@@ -344,47 +319,49 @@ function Home() {
           Doctors
         </h2>
 
-        <div className="w-full h-auto lg:h-[80vh] flex flex-col lg:flex-row gap-5 justify-center items-center p-3 border">
+        <div className="w-full h-auto lg:h-[80vh] flex flex-col lg:flex-row gap-5 justify-between items-center p-5 lg:p-10 border">
           {/* Doctors Image */}
-          <div className="w-full lg:w-[40%] h-[40vh] lg:h-[70vh] border">
+          <div className="w-full lg:w-[40%] h-[50vh] lg:h-[70vh] border">
             <img
-              className="w-full h-full object-contain"
+              className="w-full h-full object-cover rounded-lg"
               src={doctorsImg}
               alt="doctors_img"
             />
           </div>
 
           {/* Doctors Details */}
-          <div className="w-full lg:w-[40%] h-auto lg:h-[70vh] flex flex-col justify-center items-center border mx-auto">
-            <div className="flex flex-col lg:flex-row gap-3 justify-center items-center">
-              {/* Doctor One */}
-              <div className="w-full lg:w-1/2 h-[30vh] lg:h-[80%] text-center rounded-lg overflow-hidden border">
-                <img
-                  className="h-[70%] w-full object-contain"
-                  src={doctorOne}
-                  alt="doctor_one"
-                />
-                <h2 className="mt-2 text-black">Dr.Keerthana</h2>
-                <p className="mt-2 text-blue-300">BAMS</p>
-              </div>
-
-              {/* Doctor Two */}
-              <div className="w-full lg:w-1/2 h-[30vh] lg:h-[80%] text-center rounded-lg overflow-hidden border">
-                <img
-                  className="h-[70%] w-full object-contain"
-                  src={doctorTwo}
-                  alt="doctor_two"
-                />
-                <h2 className="mt-2 text-black">Dr.Mruthula M</h2>
-                <p className="mt-2 text-blue-300">BAMS</p>
-              </div>
+          <div className="w-full lg:w-[50%] h-auto lg:h-[70vh] flex flex-col justify-between items-center border mx-auto bg-gray-100 rounded-lg p-5 lg:p-10">
+            <div className="flex flex-wrap gap-5 justify-center items-center">
+              {doctorsToShow.length > 0 ? (
+                doctorsToShow.map((doctor, index) => {
+                  return (
+                    <div
+                      className="w-full md:w-1/2 lg:w-1/3 h-auto text-center rounded-lg overflow-visible border bg-white shadow-lg p-4"
+                      key={index}
+                    >
+                      {/* Ensure Image is visible */}
+                      <ImageHelper image={doctor.image} size={100} />
+                      {/* Doctor's Name */}
+                      <h2 className="mt-3 text-black font-semibold">
+                        {doctor.name || "Doctor's Name"}
+                      </h2>
+                      {/* Doctor's Qualification */}
+                      <p className="mt-1 text-red-600">
+                        {doctor.qualification || "Qualification not available"}
+                      </p>
+                    </div>
+                  );
+                })
+              ) : (
+                <p>No doctors available to display</p>
+              )}
             </div>
 
             {/* View All Doctors Button */}
             <div className="w-full flex justify-center items-center mt-5">
               <Link
                 to="/doctors"
-                className="bg-green-800 text-white px-4 py-2 rounded-lg hover:bg-green-900"
+                className="bg-green-800 text-white px-6 py-3 rounded-lg hover:bg-green-900"
               >
                 View all Doctors
               </Link>
@@ -469,121 +446,49 @@ function Home() {
           >
             We are all around
           </h2>
-          <p style={{ textAlign: "center", marginBottom: "30px" }}>
-            We are present at 13 prime locations around Karnataka
-          </p>
+          {branch.length > 1 ? (
+            <p style={{ textAlign: "center", marginBottom: "30px" }}>
+              We are currently present at {branch.length} prime locations around
+              Karnataka.
+            </p>
+          ) : (
+            <p style={{ textAlign: "center", marginBottom: "30px" }}>
+              We are currently present at 1 location.
+            </p>
+          )}
 
-          <ul className="flex flex-wrap justify-center md:justify-between gap-6 mb-[80px]">
-            {/* Card 1 */}
-            <li className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5">
-              <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
-                <div className="relative">
-                  <img src={kasthuriNagar} alt="KASTURI NAGAR" />
-                  <div className="absolute inset-0"></div>
-                </div>
-                <div className="p-4 text-center">
-                  <h5>KASTURI NAGAR</h5>
-                  <p>+91 80423 51313</p>
-                </div>
-              </div>
-              <Link
-                className="block mt-2 text-center"
-                target="_blank"
-                to="https://g.page/r/CZL4gJ4KkqoEEAI/review"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "5px",
-                }}
+          <ul className="flex flex-wrap justify-center md:justify-around gap-6 mb-[80px]">
+            {branchesToShow.map((b) => (
+              <li
+                key={b.id}
+                className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5"
               >
-                <span>
-                  <img src={map} alt="Map" />
-                </span>
-              </Link>
-            </li>
-
-            {/* Repeat for other cards */}
-            <li className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5">
-              <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
-                <div className="relative">
-                  <img src={indiraNagar} alt="INDIRANAGAR" />
-                  <div className="absolute inset-0"></div>
+                <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
+                  <div className="relative">
+                    <ImageHelper size="300px" image={b.image} />
+                    <div className="absolute inset-0"></div>
+                  </div>
+                  <div className="p-4 text-center">
+                    <h5>{b.place}</h5>
+                    <p>+91 {b.mobile}</p>
+                  </div>
                 </div>
-                <div className="p-4 text-center">
-                  <h5>INDIRANAGAR</h5>
-                  <p>+91 80500 14770</p>
-                </div>
-              </div>
-              <Link
-                className="block mt-2 text-center"
-                target="_blank"
-                to="https://g.page/r/CZL4gJ4KkqoEEAI/review"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "5px",
-                }}
-              >
-                <span>
-                  <img src={map} alt="Map" />
-                </span>
-              </Link>
-            </li>
-
-            <li className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5">
-              <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
-                <div className="relative">
-                  <img src={nandiHills} alt="NANDI HILLS" />
-                  <div className="absolute inset-0"></div>
-                </div>
-                <div className="p-4 text-center">
-                  <h5>NANDI HILLS</h5>
-                  <p>+91 95138 88668</p>
-                </div>
-              </div>
-              <Link
-                className="block mt-2 text-center"
-                target="_blank"
-                to="https://g.page/r/CZL4gJ4KkqoEEAI/review"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "5px",
-                }}
-              >
-                <span>
-                  <img src={map} alt="Map" />
-                </span>
-              </Link>
-            </li>
-
-            <li className="w-full sm:w-[48%] lg:w-[23%] border border-red-200 rounded-r-2xl mb-5">
-              <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
-                <div className="relative">
-                  <img src={kasthuriNagar} alt="KASTHURI NAGAR" />
-                  <div className="absolute inset-0"></div>
-                </div>
-                <div className="p-4 text-center">
-                  <h5>KASTHURI NAGAR</h5>
-                  <p>+91 8042351313</p>
-                </div>
-              </div>
-              <Link
-                className="block mt-2 text-center"
-                target="_blank"
-                to="https://g.page/r/CZL4gJ4KkqoEEAI/review"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "5px",
-                }}
-              >
-                <span>
-                  <img src={map} alt="Map" />
-                </span>
-              </Link>
-            </li>
-            {/* Add similar cards for the rest */}
+                <Link
+                  className="block mt-2 text-center"
+                  target="_blank"
+                  to={`https://maps.google.com/?q=${b.latitude},${b.longitude}`}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "5px",
+                  }}
+                >
+                  <span>
+                    <img src={map} alt="Map" />
+                  </span>
+                </Link>
+              </li>
+            ))}
           </ul>
           {/* View All Branches Button */}
           <div className="w-full flex justify-center items-center mt-5">

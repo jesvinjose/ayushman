@@ -287,8 +287,7 @@ function Contact() {
               >
                 <div className="border border-[#d4d4d4] bg-[#f7f7f7] rounded-[16px]">
                   <div className="relative">
-                    {/* <img src={kasthuriNagar} alt="KASTURI NAGAR" /> */}
-                    <ImageHelper size="300px" image={b.image} />
+                     <ImageHelper size="300px" image={b.image} />
                     <div className="absolute inset-0"></div>
                   </div>
                   <div className="p-4 text-center">

@@ -228,16 +228,6 @@ const TreatmentTable = () => {
           {treatments.map((treatment) => (
             <tr key={treatment._id}>
               <td className="border px-4 py-2">
-                {/* <img
-                  src={`/${treatment.image}`}
-                  alt={treatment.name}
-                  className="h-16 w-16 object-cover rounded-full"
-                /> */}
-                {/* <img
-                  src={`/${treatment.image.replaceAll('\\', '/')}`}
-                  alt={treatment.name}
-                  className="h-16 w-16 object-cover rounded-full"
-                /> */}
                 <ImageHelper size="200px" image={treatment.image} />
               </td>
               <td className="border px-4 py-2">{treatment.name}</td>

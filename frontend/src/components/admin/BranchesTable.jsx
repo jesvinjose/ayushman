@@ -6,9 +6,6 @@ import mapboxgl from "mapbox-gl";
 import ImageHelper from "../../services/helper";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-mapboxgl.accessToken =
-  "pk.eyJ1IjoiamVzdmluam9zZSIsImEiOiJjbTB6bGwxZ2QwODFhMm1zZjYzaTA3OG5iIn0.IBA5dzpAwEgF8v0OFhjq1A";
-
 const BranchTable = () => {
   const [branch, setBranch] = useState([]);
   const [newBranch, setNewBranch] = useState("");
@@ -50,6 +47,8 @@ const BranchTable = () => {
       if (map.current) {
         map.current.remove();
       }
+
+      mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
       // Initialize the new map instance
       map.current = new mapboxgl.Map({
@@ -316,11 +315,6 @@ const BranchTable = () => {
               <td className="py-2 px-4 border-b">{b.place}</td>
               <td className="border-b p-4">
                 {b.image ? (
-                  // <img
-                  //   src={ImageHelper.getImageUrl(branch.image)}
-                  //   alt={branch.place}
-                  //   className="w-20 h-20 object-cover"
-                  // />
                   <ImageHelper size="200px" image={b.image} />
                 ) : (
                   "No Image"

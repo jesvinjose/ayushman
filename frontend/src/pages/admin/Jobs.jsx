@@ -1,5 +1,4 @@
 import Sidebar from "../../components/admin/Sidebar";
-// import TreatmentsTable from "../components/admin/TreatmentTable";
 import JobPostingsTable from "../../components/admin/JobPostingsTable";
 
 export default function Jobs() {

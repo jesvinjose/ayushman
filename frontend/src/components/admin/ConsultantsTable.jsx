@@ -236,11 +236,6 @@ const ConsultantsTable = () => {
           {consultants.map((consultant) => (
             <tr key={consultant._id}>
               <td className="border px-4 py-2">
-                {/* <img
-                  src={`/${consultant.image}`}
-                  alt={consultant.name}
-                  className="h-16 w-16 object-cover rounded-full"
-                /> */}
                 <ImageHelper size="200px" image={consultant.image} />
               </td>
               <td className="border px-4 py-2">{consultant.name}</td>

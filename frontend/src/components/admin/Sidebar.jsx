@@ -2,39 +2,53 @@
 
 import { useState } from "react";
 import {
-    Bars3Icon,
-    BellIcon,
-    CalendarIcon,
-    ChartPieIcon,
-    Cog6ToothIcon,
-    DocumentDuplicateIcon,
-    FolderIcon,
-    HomeIcon,
-    UsersIcon,
-    XMarkIcon,
-  } from "@heroicons/react/24/outline";
+  Bars3Icon,
+  BellIcon,
+  CalendarIcon,
+  ChartPieIcon,
+  Cog6ToothIcon,
+  DocumentDuplicateIcon,
+  FolderIcon,
+  HomeIcon,
+  UsersIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 
-  import {
-    Dialog,
-    DialogBackdrop,
-    DialogPanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
-    TransitionChild,
-  } from "@headlessui/react";
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  TransitionChild,
+} from "@headlessui/react";
 
-  import {
-    ChevronDownIcon,
-    MagnifyingGlassIcon,
-  } from "@heroicons/react/20/solid";
+import {
+  ChevronDownIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/20/solid";
+import { useNavigate } from "react-router-dom";
 
 // Define navigation links
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
   { name: "Branches", href: "/branches", icon: UsersIcon, current: false },
+  { name: "Bookings", href: "/bookings", icon: UsersIcon, current: false },
   { name: "Treatments", href: "/treatments", icon: FolderIcon, current: false },
+  {
+    name: "Top Services",
+    href: "/topservices",
+    icon: FolderIcon,
+    current: false,
+  },
+  {
+    name: "Testimonials",
+    href: "/testimonials",
+    icon: FolderIcon,
+    current: false,
+  },
   {
     name: "Consultants",
     href: "/consultants",
@@ -57,18 +71,17 @@ const navigation = [
   { name: "Messages", href: "/messages", icon: ChartPieIcon, current: false },
 ];
 
-
-const userNavigation = [
-    { name: "Your profile", href: "#" },
-    { name: "Sign out", href: "#" },
-  ];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Sidebar({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
   return (
     <>
@@ -251,16 +264,22 @@ export default function Sidebar({ children }) {
                   transition
                   className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                 >
-                  {userNavigation.map((item) => (
-                    <MenuItem key={item.name}>
-                      <a
-                        href={item.href}
-                        className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
-                      >
-                        {item.name}
-                      </a>
-                    </MenuItem>
-                  ))}
+                  <MenuItem
+                    as="button"
+                    onClick={() => alert("Your Profile Clicked")}
+                  >
+                    <span className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50">
+                      <ChevronDownIcon className="h-6 w-6" />
+                      Your Profile
+                    </span>
+                  </MenuItem>
+
+                  <MenuItem as="button" onClick={handleLogout}>
+                    <span className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50">
+                      <ChevronDownIcon className="h-6 w-6" />
+                      Log out
+                    </span>
+                  </MenuItem>
                 </MenuItems>
               </Menu>
             </div>
@@ -271,3 +290,14 @@ export default function Sidebar({ children }) {
     </>
   );
 }
+
+// {userNavigation.map((item) => (
+//   <MenuItem key={item.name}>
+//     <a
+//       href={item.href}
+//       className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
+//     >
+//       {item.name}
+//     </a>
+//   </MenuItem>
+// ))}

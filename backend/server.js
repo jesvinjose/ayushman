@@ -28,13 +28,16 @@ app.use("/uploads", express.static(path.join(__dirname, "public", "uploads")));
 app.use(express.json());
 
 const adminRoute = require("./routes/adminRoutes");
-const treatmentRoute=require("./routes/treatmentRoutes");
-const consultantRoute=require("./routes/consultantRoutes");
-const jobRoute=require("./routes/jobRoutes");
-const dutyDoctorRoute=require("./routes/dutyDoctorRoutes");
-const applicationRoute=require("./routes/applicationRoutes");
-const contactMessageRoute=require("./routes/contactMessageRoutes");
-const branchRoute = require('./routes/branchRoutes');
+const treatmentRoute = require("./routes/treatmentRoutes");
+const consultantRoute = require("./routes/consultantRoutes");
+const jobRoute = require("./routes/jobRoutes");
+const dutyDoctorRoute = require("./routes/dutyDoctorRoutes");
+const applicationRoute = require("./routes/applicationRoutes");
+const contactMessageRoute = require("./routes/contactMessageRoutes");
+const branchRoute = require("./routes/branchRoutes");
+const bookingRoute = require("./routes/bookingRoutes");
+const topServiceRoute=require("./routes/topServiceRoutes");
+const testimonialRoute=require("./routes/testimonialRoutes");
 
 app.use("/api/admin", adminRoute);
 app.use("/api/treatment", treatmentRoute);
@@ -43,7 +46,10 @@ app.use("/api/job", jobRoute);
 app.use("/api/dutydoctor", dutyDoctorRoute);
 app.use("/api/application", applicationRoute);
 app.use("/api/contactmessage", contactMessageRoute);
-app.use('/api/branch',branchRoute);
+app.use("/api/branch", branchRoute);
+app.use("/api/booking", bookingRoute);
+app.use("/api/topservice",topServiceRoute);
+app.use("/api/testimonial",testimonialRoute)
 
 // Basic route
 app.get("/", (req, res) => {
@@ -55,4 +61,3 @@ app.listen(port, async () => {
   console.log(`Server is running on port ${port}`);
   console.log(`Open in browser: http://localhost:${port}/`);
 });
-

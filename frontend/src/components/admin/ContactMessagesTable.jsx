@@ -279,12 +279,12 @@ const ContactMessagesTable = () => {
               <td className="border px-4 py-2">{contactmessage.mobile}</td>
               <td className="border px-4 py-2">{contactmessage.message}</td>
               <td className="border px-4 py-2">
-                <button
+                {/* <button
                   onClick={() => handleEdit(contactmessage)}
                   className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 mr-2"
                 >
                   Edit
-                </button>
+                </button> */}
                 <button
                   onClick={() => handleDelete(contactmessage._id)}
                   className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"

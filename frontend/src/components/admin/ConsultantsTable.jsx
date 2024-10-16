@@ -6,13 +6,16 @@ import ImageHelper from "../../services/helper";
 
 const ConsultantsTable = () => {
   const [consultants, setConsultants] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [currentPage, setCurrentPage] = useState(1); // State for pagination
+  const [itemsPerPage] = useState(2); // Number of items per page
   const [newConsultantName, setNewConsultantName] = useState("");
   const [newConsultantQualification, setNewConsultantQualification] =
     useState("");
   const [newConsultantImage, setNewConsultantImage] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false); // State to control the visibility of the edit form
-  const [currentConsultant, setCurrentConsultant] = useState(null); // To store the current consultant details for editing
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [currentConsultant, setCurrentConsultant] = useState(null);
 
   useEffect(() => {
     const fetchConsultants = async () => {
@@ -87,9 +90,9 @@ const ConsultantsTable = () => {
   };
 
   const handleEdit = (consultant) => {
-    setCurrentConsultant(consultant); // Set the current consultant to be edited
-    setShowEditForm(true); // Show the edit form
-    setShowAddForm(false); // Hide the add form if it is open
+    setCurrentConsultant(consultant);
+    setShowEditForm(true);
+    setShowAddForm(false);
   };
 
   const handleUpdateConsultant = async () => {
@@ -101,7 +104,6 @@ const ConsultantsTable = () => {
         newConsultantQualification || currentConsultant.qualification
       );
 
-      // Only append a new image if a new one is selected
       if (newConsultantImage) {
         formData.append("image", newConsultantImage);
       }
@@ -126,8 +128,8 @@ const ConsultantsTable = () => {
             )
           );
 
-          setCurrentConsultant(null); // Clear the current consultant state
-          setShowEditForm(false); // Hide the edit form
+          setCurrentConsultant(null);
+          setShowEditForm(false);
           setNewConsultantName("");
           setNewConsultantQualification("");
           setNewConsultantImage(null);
@@ -138,20 +140,47 @@ const ConsultantsTable = () => {
     }
   };
 
+  // Search filter based on name and qualification
+  const filteredConsultants = consultants.filter((consultant) =>
+    consultant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    consultant.qualification
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
+
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentConsultants = filteredConsultants.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const totalPages = Math.ceil(filteredConsultants.length / itemsPerPage);
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">Consultants</h2>
         <button
           onClick={() => {
-            setShowAddForm(!showAddForm); // Toggle the Add form
-            setShowEditForm(false); // Ensure the Edit form is closed
+            setShowAddForm(!showAddForm);
+            setShowEditForm(false);
           }}
           className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
         >
           {showAddForm ? "Cancel" : "Add Consultant"}
         </button>
       </div>
+
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Search by Name or Qualification"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="border p-2 w-full mb-4"
+      />
 
       {showAddForm && (
         <div className="mb-6 p-4 border rounded-md bg-white shadow">
@@ -233,23 +262,23 @@ const ConsultantsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {consultants.map((consultant) => (
+          {currentConsultants.map((consultant) => (
             <tr key={consultant._id}>
               <td className="border px-4 py-2">
-                <ImageHelper size="200px" image={consultant.image} />
+              <ImageHelper size="200px" image={consultant.image} />
               </td>
               <td className="border px-4 py-2">{consultant.name}</td>
               <td className="border px-4 py-2">{consultant.qualification}</td>
               <td className="border px-4 py-2">
                 <button
                   onClick={() => handleEdit(consultant)}
-                  className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 mr-2"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(consultant._id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+                  className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2"
                 >
                   Delete
                 </button>
@@ -258,6 +287,23 @@ const ConsultantsTable = () => {
           ))}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      <div className="mt-4 flex justify-center space-x-2">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => setCurrentPage(index + 1)}
+            className={`${
+              currentPage === index + 1
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-black"
+            } px-3 py-1 rounded`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

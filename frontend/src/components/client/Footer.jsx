@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Kottackkal from "../../assets/images/png/footer_kottakkal_hov_bg.png";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Footer = () => {
+  const [topservices, setTopServices] = useState([]);
+
+  useEffect(() => {
+    const fetchTopServices = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/topservice/getalltopservices"
+        );
+        console.log(response.data); // Check the structure of the data
+        setTopServices(response.data); // Assuming API returns { dutyDoctors: [...] }
+      } catch (error) {
+        console.error("Error fetching topservices:", error);
+      }
+    };
+
+    fetchTopServices();
+  }, []);
+
   return (
     <div className="bg-white">
       <div className="footer-container max-w-[1380px] mx-auto px-4 py-8">
@@ -84,54 +104,18 @@ const Footer = () => {
               <li className="top-services-item text-lg font-bold">
                 Top Services
               </li>
-              <li className="top-services-item">
-                <a
-                  href="/treatment/panchakarma"
-                  className="text-gray-600 hover:text-blue-500"
-                >
-                  Panchakarma
-                </a>
-              </li>
-              <li className="top-services-item">
-                <a
-                  href="/treatment/abhyangam"
-                  className="text-gray-600 hover:text-blue-500"
-                >
-                  Abhyangam
-                </a>
-              </li>
-              <li className="top-services-item">
-                <a
-                  href="/treatment/shirodhara"
-                  className="text-gray-600 hover:text-blue-500"
-                >
-                  Shirodhara
-                </a>
-              </li>
-              <li className="top-services-item">
-                <a
-                  href="/treatment/beauty-therapy"
-                  className="text-gray-600 hover:text-blue-500"
-                >
-                  Beauty Therapy
-                </a>
-              </li>
-              <li className="top-services-item">
-                <a
-                  href="/treatment/pizhichil"
-                  className="text-gray-600 hover:text-blue-500"
-                >
-                  Pizhichil
-                </a>
-              </li>
-              <li className="top-services-item">
-                <a
-                  href="/treatment/njavarakizhi"
-                  className="text-gray-600 hover:text-blue-500"
-                >
-                  Njavara Kizhi
-                </a>
-              </li>
+              {topservices.map((topservice) => {
+                return (
+                  <li className="top-services-item">
+                    <Link
+                      to={`/treatment/${topservice.service}`}
+                      className="text-gray-600 hover:text-blue-500"
+                    >
+                      {topservice.name}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </li>
 
@@ -147,15 +131,16 @@ const Footer = () => {
       {/* Copyright Section */}
       <div className="footer-copy-right bg-gray-100 py-4 text-center text-sm text-gray-500">
         <p>
-          © Copyright 2024 Ayushman Ayurveda <span>|</span> Design:
-          <a
-            href="https://inbounderz.com/"
+          © Copyright {new Date().getFullYear()} Ayushman Ayurveda{" "}
+          <span>|</span> Design:
+          <Link
+            to="https://dashing-naiad-4b4d23.netlify.app/"
             className="hover:text-blue-500"
             target="_blank"
             rel="noopener noreferrer"
           >
-            inbounderz.com
-          </a>
+            By Jesvin Jose
+          </Link>
         </p>
       </div>
     </div>

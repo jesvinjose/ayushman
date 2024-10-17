@@ -19,7 +19,7 @@
 
 // export default ImageHelper;
 
-const ImageHelper = ({ image, size = 60 }) => {
+const ImageHelper = ({ image, size = 60, width }) => {
   // Check if the image exists, otherwise provide a default or fallback image
   const processedImage = image
     ? `http://localhost:4000/${image.replaceAll("\\", "/").replaceAll("public/", "")}`
@@ -29,7 +29,7 @@ const ImageHelper = ({ image, size = 60 }) => {
     <img
       src={processedImage}
       className="object-cover rounded-lg"
-      style={{ width: size, height: size }} // You can adjust the size here if needed
+      style={{ width: width ?? size, height: size }} // You can adjust the size here if needed
       alt="Image"
     />
   );

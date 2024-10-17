@@ -17,9 +17,13 @@ import Contact from "./pages/client/Contact";
 import Booking from "./pages/client/Booking";
 import SingleTherapy from "./pages/client/SingleTherapy";
 import Branches from "./pages/admin/Branches";
+<<<<<<< Updated upstream
 import Bookings from "./pages/admin/Bookings";
 import TopServices from "./pages/admin/TopServices";
 import Testimonials from "./pages/admin/Testimonials";
+=======
+import ContactDetails from "./pages/admin/ContactDetails";
+>>>>>>> Stashed changes
 
 function App() {
   return (
@@ -34,10 +38,16 @@ function App() {
           <Route path="/duty-doctors" element={<DutyDoctors />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/messages" element={<ContactMessages />} />
+<<<<<<< Updated upstream
           <Route path="/branches" element={<Branches />} />
           <Route path="/bookings" element={<Bookings />} />          
           <Route path="/topservices" element={<TopServices />} />
           <Route path="/testimonials" element={<Testimonials/>}/>
+=======
+          <Route path="/branches" element={<Branches/>}/>   
+          <Route path="/contactdetails" element={<ContactDetails/>}/>   
+
+>>>>>>> Stashed changes
           {/* Client Routes wrapped in ClientLayout (with Header and Footer) */}
           <Route element={<ClientLayout />}>
             <Route path="/" element={<Home />} />

@@ -5,12 +5,31 @@ import hamburgerIcon from "../../assets/images/png/hamburger_icon.png";
 import closeIcon from "../../assets/images/png/close_icon.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ImageHelper from "../../services/helper";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [treatments, setTreatments] = useState([]);
+  const [contacts, setContacts] = useState([])
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/contactdetails/getcontacts"
+        );
+        console.log(response.data[0],"my image");
+        
+        setContacts(response.data[0]);
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+      }
+    };
+
+    fetchContacts();
+  }, []);
 
   useEffect(() => {
     const fetchTreatments = async () => {
@@ -31,7 +50,7 @@ const Header = () => {
     <div className="nav-wrapper bg-white shadow-md">
       <div className="nav-wrapper-content flex justify-between items-center p-4">
         <Link to="/">
-          <img src={logo} alt="logo" className="w-24" />
+          <ImageHelper  image={contacts.image} size="80px" width="80px" className="w-24" />
         </Link>
         <ul
           className="nav-list hidden md:flex space-x-8"

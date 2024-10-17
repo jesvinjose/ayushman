@@ -28,6 +28,9 @@ function Home() {
   const [backgroundImage, setBackgroundImage] = useState(bookingBg);
   const [franchiseBackgroundImage, setFranchiseBackgroundImage] =
     useState(franchiseBg);
+  
+
+  
 
   // Function to update the background image based on screen size
   const updateBackgroundImage = () => {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+<<<<<<< Updated upstream
   Bars3Icon,
   BellIcon,
   CalendarIcon,
@@ -13,6 +14,20 @@ import {
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+=======
+    Bars3Icon,
+    BellIcon,
+    CalendarIcon,
+    ChartPieIcon,
+    Cog6ToothIcon,
+    DocumentDuplicateIcon,
+    FolderIcon,
+    HomeIcon,
+    UsersIcon,
+    XMarkIcon,
+    MailIcon,
+  } from "@heroicons/react/24/outline";
+>>>>>>> Stashed changes
 
 import {
   Dialog,
@@ -69,6 +84,8 @@ const navigation = [
     current: false,
   },
   { name: "Messages", href: "/messages", icon: ChartPieIcon, current: false },
+  { name: "Contact Details", href: "/contactdetails", icon: FolderIcon, current: false },
+
 ];
 
 function classNames(...classes) {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Kottackkal from "../../assets/images/png/footer_kottakkal_hov_bg.png";
+<<<<<<< Updated upstream
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -22,6 +23,33 @@ const Footer = () => {
     fetchTopServices();
   }, []);
 
+=======
+import ImageHelper from "../../services/helper";
+import axios from "axios";
+
+
+const Footer = () => {
+  const [contacts, setContacts] = useState([])
+
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/contactdetails/getcontacts"
+        );
+        console.log(response.data[0],"my image");
+        
+        setContacts(response.data[0]);
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+      }
+    };
+    fetchContacts();
+  }, []);
+
+
+>>>>>>> Stashed changes
   return (
     <div className="bg-white">
       <div className="footer-container max-w-[1380px] mx-auto px-4 py-8">
@@ -29,68 +57,70 @@ const Footer = () => {
           {/* Logo and Contact Info Section */}
           <li className="footer-section-item space-y-4">
             <a href="/">
-              <img
+              {/* <img
                 src="http://www.ayushmanayurvedic.in/assets/images/svg/footer_logo.svg"
                 alt="footer logo"
                 className="h-10"
+              /> */}
+              <ImageHelper image={contacts.image} size="100px" 
               />
             </a>
             <div className="footer-company-mail flex items-center space-x-2">
               <img
-                src="http://www.ayushmanayurvedic.in/assets/images/svg/mail.svg"
+                src="http://localhost:4000/uploads/images/mail.svg"
                 alt="mail icon"
                 className="h-6"
               />
               <a
-                href="mailto:info@ayushmanayurvedic.in"
+                href="mailto:${contacts.email}"
                 className="text-gray-600 hover:text-blue-500"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                info@ayushmanayurvedic.in
+                {contacts.email}
               </a>
             </div>
             <div className="footer-social-media flex space-x-4">
               <a
-                href="https://www.facebook.com/AyushmanAyurvedicofficial/"
+                href={contacts.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <img
-                  src="http://www.ayushmanayurvedic.in/assets/images/svg/fb.svg"
+                  src="http://localhost:4000/uploads/images/fb.svg"
                   alt="facebook logo"
                   className="h-6"
                 />
               </a>
               <a
-                href="https://twitter.com/ayushmanayurve1?lang=en"
+                href={contacts.twitter}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <img
-                  src="http://www.ayushmanayurvedic.in/assets/images/svg/x.svg"
+                  src="http://localhost:4000/uploads/images/x.svg"
                   alt="x logo"
                   className="h-6"
                 />
               </a>
               <a
-                href="https://www.instagram.com/ayushmanayurvedaofficial/"
+                href={contacts.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <img
-                  src="http://www.ayushmanayurvedic.in/assets/images/svg/ig.svg"
+                  src="http://localhost:4000/uploads/images/ig.svg"
                   alt="instagram logo"
                   className="h-6"
                 />
               </a>
               <a
-                href="https://www.linkedin.com/company/100897299/admin/feed/posts/"
+                href={contacts.linkdin}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <img
-                  src="http://www.ayushmanayurvedic.in/assets/images/svg/ln.svg"
+                  src="http://localhost:4000/uploads/images/ln.svg"
                   alt="linkedin logo"
                   className="h-6"
                 />

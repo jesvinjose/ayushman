@@ -35,6 +35,8 @@ const dutyDoctorRoute=require("./routes/dutyDoctorRoutes");
 const applicationRoute=require("./routes/applicationRoutes");
 const contactMessageRoute=require("./routes/contactMessageRoutes");
 const branchRoute = require('./routes/branchRoutes');
+const contactDetailsRoute = require("./routes/contactDetails");
+
 
 app.use("/api/admin", adminRoute);
 app.use("/api/treatment", treatmentRoute);
@@ -44,6 +46,8 @@ app.use("/api/dutydoctor", dutyDoctorRoute);
 app.use("/api/application", applicationRoute);
 app.use("/api/contactmessage", contactMessageRoute);
 app.use('/api/branch',branchRoute);
+app.use("/api/contactdetails", contactDetailsRoute);
+
 
 // Basic route
 app.get("/", (req, res) => {

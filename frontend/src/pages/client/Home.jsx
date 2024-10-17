@@ -115,6 +115,139 @@ function Home() {
   // Show only 1/2 of the total branches
   const branchesToShow = branch.slice(0, Math.floor(branch.length / 2));
 
+  // Form state for input fields
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    mobile: "",
+    date: "",
+    timeSlot: "",
+    treatment: "",
+    branch: "",
+    message: "",
+  });
+
+  const [minDate, setMinDate] = useState(""); // To store tomorrow's date
+
+  // All available time slots
+  const allTimeSlots = [
+    "08:00 AM - 09:00 AM",
+    "09:00 AM - 10:00 AM",
+    "10:00 AM - 11:00 AM",
+    "11:00 AM - 12:00 PM",
+    "12:00 PM - 01:00 PM",
+    "01:00 PM - 02:00 PM",
+    "02:00 PM - 03:00 PM",
+    "03:00 PM - 04:00 PM",
+    "04:00 PM - 05:00 PM",
+    "05:00 PM - 06:00 PM",
+    "06:00 PM - 07:00 PM",
+  ];
+
+  const [timeSlots, setTimeSlots] = useState([]);
+  const [isTimeSlotDisabled, setIsTimeSlotDisabled] = useState(true);
+
+  // Function to get tomorrow's date in 'YYYY-MM-DD' format
+  const getTomorrowDate = () => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    const year = tomorrow.getFullYear();
+    const month = ("0" + (tomorrow.getMonth() + 1)).slice(-2); // Add leading 0 to month
+    const day = ("0" + tomorrow.getDate()).slice(-2); // Add leading 0 to day
+    return `${year}-${month}-${day}`;
+  };
+
+  useEffect(() => {
+    setMinDate(getTomorrowDate()); // Set minimum date to tomorrow
+  }, []);
+
+  useEffect(() => {
+    if (formData.date) {
+      const selectedDate = new Date(formData.date);
+      // Enable time slot selection if a valid future date is selected
+      setIsTimeSlotDisabled(false);
+      const dayOfWeek = selectedDate.getDay();
+      // Check if the selected day is Tuesday (day 2), and limit time slots
+      if (dayOfWeek === 2) {
+        setTimeSlots(allTimeSlots.slice(0, 5)); // Limit time slots on Tuesdays
+      } else {
+        setTimeSlots(allTimeSlots);
+      }
+    } else {
+      // Disable time slot selection if no date is selected
+      setIsTimeSlotDisabled(true);
+      // setTimeSlots([]);
+    }
+  }, [formData.date]);
+
+  // Function to handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    // Update the form data state
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Function to handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log(formData);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/booking/registerbooking",
+        formData
+      );
+
+      // Handle successful booking registration
+      alert(response.data.message);
+      console.log("Booking registered successfully:", response.data);
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        mobile: "",
+        date: "",
+        timeSlot: "",
+        treatment: "",
+        branch: "",
+        message: "",
+      });
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // If the error has a response from the server (like a time slot being fully booked)
+        alert(error.response.data.message);
+      } else {
+        // If it's some other error
+        alert("An error occurred. Please try again.");
+      }
+      console.error("Error submitting form:", error);
+    }
+  };
+
+  const [testimonials, setTestimonials] = useState([]);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/testimonial/gettestimonials"
+        );
+        setTestimonials(response.data);
+      } catch (error) {
+        console.error("Error fetching testimonials:", error);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
   return (
     <div>
       <div
@@ -369,13 +502,34 @@ function Home() {
 
       {/* Testimonials Section */}
 
-      <div className="w-full bg-green-200 p-5 h-auto">
+      {/* <div className="w-full bg-green-200 p-5 h-auto">
         <h2 className="text-green-600 text-3xl font-bold text-center p-5 lg:pb-10">
           Testimonials
         </h2>
-        <div className="flex w-full flex-wrap gap-5 justify-center lg:justify-between">
-          {/* Testimonial One */}
-          <div className="w-full  bg-green-200  rounded-lg sm:w-1/2 lg:w-1/4 flex justify-center items-center h-[200px] lg:h-[282px]">
+        <div className="flex w-full flex-wrap gap-5 justify-center lg:justify-between"> */}
+      {/* {testimonials.map((testimonial) => {
+            return (
+              <div className="w-full  bg-green-200  rounded-lg sm:w-1/2 lg:w-1/4 flex justify-center items-center h-[200px] lg:h-[282px]">
+                <Link
+                  className="relative w-full h-full overflow-hidden flex justify-center items-center"
+                  to={testimonial.videoUrl}
+                  id="openVideoModalBtn"
+                >
+                  <span className="absolute inset-0 bg-black bg-opacity-30 flex justify-center items-center">
+                    <img
+                      className="w-6 h-6"
+                      src={play_button}
+                      alt="Play Button"
+                    />
+                  </span>
+                  <ImageHelper size="200px" image={testimonial.image} />
+                </Link>
+              </div>
+            );
+          })} */}
+
+      {/* Testimonial One */}
+      {/* <div className="w-full  bg-green-200  rounded-lg sm:w-1/2 lg:w-1/4 flex justify-center items-center h-[200px] lg:h-[282px]">
             <a
               className="relative w-full h-full overflow-hidden"
               href="https://www.youtube.com/watch?v=vvFnrHH1M00"
@@ -390,10 +544,10 @@ function Home() {
                 alt="Testimonial One"
               />
             </a>
-          </div>
+          </div> */}
 
-          {/* Testimonial Two */}
-          <div className="w-full  bg-green-200 rounded-lg sm:w-1/2 lg:w-1/4 flex justify-center items-center h-[200px] lg:h-[282px]">
+      {/* Testimonial Two */}
+      {/* <div className="w-full  bg-green-200 rounded-lg sm:w-1/2 lg:w-1/4 flex justify-center items-center h-[200px] lg:h-[282px]">
             <a
               className="relative w-full h-full overflow-hidden"
               href="https://www.youtube.com/watch?v=vvFnrHH1M00"
@@ -408,10 +562,10 @@ function Home() {
                 alt="Testimonial Two"
               />
             </a>
-          </div>
+          </div> */}
 
-          {/* Testimonial Three */}
-          <div className="w-full  bg-green-200 sm:w-1/2 lg:w-1/4 flex justify-center rounded-lg items-center h-[200px] lg:h-[282px]">
+      {/* Testimonial Three */}
+      {/* <div className="w-full  bg-green-200 sm:w-1/2 lg:w-1/4 flex justify-center rounded-lg items-center h-[200px] lg:h-[282px]">
             <a
               className="relative w-full h-full overflow-hidden"
               href="https://www.youtube.com/watch?v=vvFnrHH1M00"
@@ -426,9 +580,56 @@ function Home() {
                 alt="Testimonial Three"
               />
             </a>
+          </div> */}
+      {/* </div>
+      </div> */}
+
+      {testimonials.length > 0 ? (
+        <div className="w-full bg-green-200 p-5 h-auto">
+          <h2 className="text-green-600 text-3xl font-bold text-center p-5 lg:pb-10">
+            Testimonials
+          </h2>
+          <div className="flex w-full flex-wrap gap-5 justify-center lg:justify-between">
+            {testimonials.map((testimonial) => (
+              <div className="w-full sm:w-1/2 lg:w-1/4 bg-white rounded-lg p-5 shadow-lg flex flex-col items-center">
+                {/* Video Section */}
+                <div className="relative w-full h-[200px] lg:h-[250px] rounded-md overflow-hidden mb-4">
+                  <a
+                    href={testimonial.videoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full h-full flex justify-center items-center"
+                    id="openVideoModalBtn"
+                  >
+                    <span className="absolute inset-0 bg-black bg-opacity-40 flex justify-center items-center">
+                      <img
+                        className="w-10 h-10"
+                        src={play_button}
+                        alt="Play Button"
+                      />
+                    </span>
+                    <ImageHelper size="200px" image={testimonial.image} />
+                  </a>
+                </div>
+
+                {/* Testimonial Message */}
+                <p className="text-center text-gray-700 mb-2 text-sm lg:text-base px-4">
+                  "{testimonial.message}"
+                </p>
+
+                {/* Testimonial Name */}
+                <h4 className="text-center text-green-700 font-semibold text-lg lg:text-xl">
+                  {testimonial.name}
+                  <br />
+                  {testimonial.designation}
+                </h4>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      ) : (
+        <></>
+      )}
 
       {/* Branches Section */}
       <div className="bg-[#f1f1f1]">
@@ -499,10 +700,9 @@ function Home() {
         </div>
       </div>
 
-      {/* Booking Form Section */}
       <div
         style={{
-          padding: "35px",
+          paddingLeft: "35px",
         }}
       >
         <div
@@ -517,110 +717,169 @@ function Home() {
           }}
         >
           <div className="book-appointment-container flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
-            {/* Left Section: Title */}
-            <div className="lg:w-1/2 lg:pr-8 flex justify-center items-center">
-              <h2 className="text-[24px] sm:text-[28px] md:text-[41px] leading-[45px] text-center font-bold text-white">
-                Book an Appointment
-              </h2>
+            <div className="flex flex-col w-full lg:w-1/2">
+              {/* Left Section: Title */}
+              <div className="flex justify-center lg:justify-start lg:pr-8">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-tight text-center lg:text-left font-bold text-white">
+                  Book an Appointment (8:00 am to 7:00 pm)
+                </h2>
+              </div>
+              <div className="mt-4 text-center lg:text-left">
+                <h6 className="text-sm md:text-base" style={{ color: "red" }}>
+                  Booking Not available on Tuesdays after 1:00 PM <br />
+                </h6>
+              </div>
             </div>
 
             {/* Right Section: Form */}
-            <div className="lg:w-1/2 mt-16 lg:mt-0">
+            <div className="w-full lg:w-1/2 mt-8 lg:mt-0">
               <form
-                method="post"
                 className="formSubmit flex flex-col items-center w-full"
-                name="formSubmit"
-                id="formSubmit"
-                data-content="/appointment/create"
-                encType="multipart/form-data"
+                onSubmit={handleSubmit}
               >
-                <input
-                  type="hidden"
-                  name="_token"
-                  value="iwtJ3b9nO8hND583OVvp2uIEft9sG0w7axgTGYSD"
-                />
                 <ul className="flex flex-wrap gap-4 w-full">
                   {/* Input Fields */}
-                  <li className="w-full lg:w-2/5">
+                  <li className="w-full sm:w-1/2 lg:w-2/5">
                     <input
                       type="text"
                       placeholder="First Name"
                       required
-                      name="first_name"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
                       className="w-full p-3 border border-gray-300 rounded"
                     />
                     <span className="error-validation text-red-500"></span>
                   </li>
-                  <li className="w-full lg:w-2/5">
+                  <li className="w-full sm:w-1/2 lg:w-2/5">
                     <input
                       type="text"
                       placeholder="Last Name"
                       required
-                      name="last_name"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
                       className="w-full p-3 border border-gray-300 rounded"
                     />
                     <span className="error-validation text-red-500"></span>
                   </li>
-                  <li className="w-full lg:w-2/5">
+                  <li className="w-full sm:w-1/2 lg:w-2/5">
                     <input
                       type="email"
                       placeholder="Email"
                       required
                       name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
                       className="w-full p-3 border border-gray-300 rounded"
                     />
                     <span className="error-validation text-red-500"></span>
                   </li>
-                  <li className="w-full lg:w-2/5">
+                  <li className="w-full sm:w-1/2 lg:w-2/5">
                     <input
                       type="tel"
-                      placeholder="Phone Number"
+                      placeholder="Mobile Number"
                       required
-                      name="phone_number"
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleInputChange}
+                      className="w-full p-3 border border-gray-300 rounded"
+                    />
+                    <span className="error-validation text-red-500"></span>
+                  </li>
+                  <li className="w-full sm:w-1/2 lg:w-2/5">
+                    <input
+                      type="date"
+                      placeholder="Date"
+                      required
+                      name="date"
+                      value={formData.date}
+                      onChange={handleInputChange} // Regular handler for date input
+                      min={minDate} // Set the min date to tomorrow
                       className="w-full p-3 border border-gray-300 rounded"
                     />
                     <span className="error-validation text-red-500"></span>
                   </li>
 
-                  {/* Dropdown Fields */}
-                  <li className="w-full lg:w-2/5">
+                  <li className="w-full sm:w-1/2 lg:w-2/5">
+                    <select
+                      name="timeSlot"
+                      required
+                      value={formData.timeSlot}
+                      onChange={handleInputChange}
+                      disabled={isTimeSlotDisabled}
+                      className="w-full p-3 border border-gray-300 rounded"
+                    >
+                      <option value="" disabled>
+                        Select time slot (Date First)
+                      </option>
+                      {timeSlots.map((slot) => (
+                        <option key={slot} value={slot}>
+                          {slot}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="error-validation text-red-500"></span>
+                  </li>
+
+                  {/* Treatment and Location Fields */}
+                  <li className="w-full sm:w-1/2 lg:w-2/5">
                     <select
                       name="treatment"
                       required
+                      value={formData.treatment}
+                      onChange={handleInputChange}
                       className="w-full p-3 border border-gray-300 rounded"
                     >
                       <option value="">Treatment</option>
-                      <option value="6">Panchakarma</option>
-                      {/* Add other options here */}
+                      {/*<option value="6">Panchakarma</option> */}
+                      {treatments.map((treatment) => {
+                        return (
+                          <option key={treatment._id} value={treatment._id}>
+                            {treatment.name}
+                          </option>
+                        );
+                      })}
                     </select>
                     <span className="error-validation text-red-500"></span>
                   </li>
-                  <li className="w-full lg:w-2/5">
+                  <li className="w-full sm:w-1/2 lg:w-2/5">
                     <select
-                      name="location"
+                      name="branch"
                       required
+                      value={formData.branch}
+                      onChange={handleInputChange}
                       className="w-full p-3 border border-gray-300 rounded"
                     >
-                      <option value="">Location</option>
-                      <option value="2">KASTURI NAGAR</option>
-                      {/* Add other options here */}
+                      <option value="">Branch</option>
+                      {/* <option value="2">KASTURI NAGAR</option> */}
+                      {branch.map((branch) => {
+                        return (
+                          <option key={branch._id} value={branch._id}>
+                            {branch.place}
+                          </option>
+                        );
+                      })}
                     </select>
                     <span className="error-validation text-red-500"></span>
                   </li>
-
                   {/* Message Field */}
                   <li className="w-full">
                     <textarea
                       name="message"
                       placeholder="Tell us more"
+                      value={formData.message}
+                      onChange={handleInputChange}
                       className="w-full p-3 border border-gray-300 rounded h-[95px] mt-[10px]"
                     ></textarea>
                   </li>
-
                   {/* Submit Button */}
                   <li className="w-full text-center">
-                    <button className="bg-green-600 text-white rounded-full py-2 px-4 hover:bg-blue-700 transition">
-                      Submit
+                    <button
+                      type="submit"
+                      className="bg-green-600 text-white rounded-full py-2 px-4 hover:bg-blue-700 transition"
+                    >
+                      Book Now
                     </button>
                   </li>
                 </ul>

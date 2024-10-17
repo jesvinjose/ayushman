@@ -366,12 +366,12 @@ const ApplicationsTable = () => {
                 </button>
               </td>
               <td className="border p-2">
-                <button
+                {/* <button
                   onClick={() => handleEdit(application)}
                   className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600"
                 >
                   Edit
-                </button>
+                </button> */}
                 <button
                   onClick={() => handleDelete(application._id)}
                   className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 ml-2"

@@ -9,6 +9,12 @@ const TopServicesTable = () => {
   const [service, setService] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
 
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [currentPage, setCurrentPage] = useState(1); // State for pagination
+  const itemsPerPage = 2; // Number of items per page
+
+  const [filteredTopservices, setFilteredTopservices] = useState([]);
+
   useEffect(() => {
     const fetchTreatments = async () => {
       try {
@@ -32,6 +38,7 @@ const TopServicesTable = () => {
         );
         console.log(response.data); // Check the structure of the data
         setTopServices(response.data); // Assuming API returns { dutyDoctors: [...] }
+        setFilteredTopservices(response.data);
       } catch (error) {
         console.error("Error fetching topservices:", error);
       }
@@ -39,6 +46,19 @@ const TopServicesTable = () => {
 
     fetchTopServices();
   }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = topservices.filter(
+      (topservice) =>
+        topservice.name.toLowerCase().includes(query) ||
+        String(topservice.service).toLowerCase().includes(query)
+    );
+    setFilteredTopservices(filtered);
+    setCurrentPage(1); // Reset to first page on search
+  };
 
   const handleAddtoTopService = async () => {
     if (service) {
@@ -93,6 +113,20 @@ const TopServicesTable = () => {
     setShowAddForm(false);
   };
 
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredTopservices.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const totalPages = Math.ceil(filteredTopservices.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
@@ -106,7 +140,16 @@ const TopServicesTable = () => {
           Add Top Service
         </button>
       </div>
-    
+
+      {/* Search Box */}
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={handleSearch}
+        placeholder="Search By Treatment Name or Treatment Id"
+        className="border p-2 w-full mb-4"
+      />
+
       {showAddForm && (
         <div className="mb-6 p-4 border rounded-md bg-white shadow max-w-md mx-auto md:max-w-xl lg:max-w-2xl">
           <h3 className="text-lg font-medium mb-4">Add New Top Service</h3>
@@ -154,7 +197,7 @@ const TopServicesTable = () => {
           </tr>
         </thead>
         <tbody>
-          {topservices.map((topservice) => (
+          {currentItems.map((topservice) => (
             <tr key={topservice._id}>
               <td className="border px-4 py-2">{topservice.name}</td>
               <td className="border px-4 py-2">{topservice.service}</td>
@@ -170,6 +213,23 @@ const TopServicesTable = () => {
           ))}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-4 py-2 mx-1 rounded-md ${
+              currentPage === index + 1
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

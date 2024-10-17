@@ -6,9 +6,6 @@ import ImageHelper from "../../services/helper";
 
 const ConsultantsTable = () => {
   const [consultants, setConsultants] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
-  const [currentPage, setCurrentPage] = useState(1); // State for pagination
-  const [itemsPerPage] = useState(2); // Number of items per page
   const [newConsultantName, setNewConsultantName] = useState("");
   const [newConsultantQualification, setNewConsultantQualification] =
     useState("");
@@ -17,6 +14,12 @@ const ConsultantsTable = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [currentConsultant, setCurrentConsultant] = useState(null);
 
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [currentPage, setCurrentPage] = useState(1); // State for pagination
+  const itemsPerPage = 2; // Number of items per page
+
+  const [filteredConsultants, setFilteredConsultants] = useState([]);
+
   useEffect(() => {
     const fetchConsultants = async () => {
       try {
@@ -24,6 +27,7 @@ const ConsultantsTable = () => {
           "http://localhost:4000/api/consultant/getconsultants"
         );
         setConsultants(response.data);
+        setFilteredConsultants(response.data);
       } catch (error) {
         console.error("Error fetching consultants:", error);
       }
@@ -31,6 +35,19 @@ const ConsultantsTable = () => {
 
     fetchConsultants();
   }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = consultants.filter(
+      (consultant) =>
+        consultant.name.toLowerCase().includes(query) ||
+        consultant.qualification.toLowerCase().includes(query)
+    );
+    setFilteredConsultants(filtered);
+    setCurrentPage(1); // Reset to first page on search
+  };
 
   const handleImageUpload = (e) => {
     setNewConsultantImage(e.target.files[0]);
@@ -140,23 +157,19 @@ const ConsultantsTable = () => {
     }
   };
 
-  // Search filter based on name and qualification
-  const filteredConsultants = consultants.filter((consultant) =>
-    consultant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    consultant.qualification
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
-  );
-
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentConsultants = filteredConsultants.slice(
+  const currentItems = filteredConsultants.slice(
     indexOfFirstItem,
     indexOfLastItem
   );
 
   const totalPages = Math.ceil(filteredConsultants.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div className="p-6">
@@ -173,12 +186,12 @@ const ConsultantsTable = () => {
         </button>
       </div>
 
-      {/* Search Input */}
+      {/* Search Box */}
       <input
         type="text"
-        placeholder="Search by Name or Qualification"
         value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        onChange={handleSearch}
+        placeholder="Search By Name or Qualification"
         className="border p-2 w-full mb-4"
       />
 
@@ -262,10 +275,10 @@ const ConsultantsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {currentConsultants.map((consultant) => (
+          {currentItems.map((consultant) => (
             <tr key={consultant._id}>
               <td className="border px-4 py-2">
-              <ImageHelper size="200px" image={consultant.image} />
+                <ImageHelper size="200px" image={consultant.image} />
               </td>
               <td className="border px-4 py-2">{consultant.name}</td>
               <td className="border px-4 py-2">{consultant.qualification}</td>
@@ -289,16 +302,16 @@ const ConsultantsTable = () => {
       </table>
 
       {/* Pagination */}
-      <div className="mt-4 flex justify-center space-x-2">
+      <div className="flex justify-center mt-4">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index + 1}
-            onClick={() => setCurrentPage(index + 1)}
-            className={`${
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-4 py-2 mx-1 rounded-md ${
               currentPage === index + 1
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-black"
-            } px-3 py-1 rounded`}
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
           >
             {index + 1}
           </button>

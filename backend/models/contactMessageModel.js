@@ -24,7 +24,7 @@ const contactMessageSchema = mongoose.Schema(
     },
     message: {
       type: String,
-      required: true, // Path to the resume file
+      required: true, 
     },
   },
   {

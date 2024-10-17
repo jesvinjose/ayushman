@@ -234,6 +234,7 @@ function Contact() {
                       className="border border-gray-300 rounded p-2 w-full"
                       value={messageData.message}
                       onChange={handleOnChange}
+                      required
                     ></textarea>
                   </div>
                   <div className="w-full p-2">

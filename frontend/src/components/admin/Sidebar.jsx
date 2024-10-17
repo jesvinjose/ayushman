@@ -2,19 +2,6 @@
 
 import { useState } from "react";
 import {
-<<<<<<< Updated upstream
-  Bars3Icon,
-  BellIcon,
-  CalendarIcon,
-  ChartPieIcon,
-  Cog6ToothIcon,
-  DocumentDuplicateIcon,
-  FolderIcon,
-  HomeIcon,
-  UsersIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-=======
     Bars3Icon,
     BellIcon,
     CalendarIcon,
@@ -27,7 +14,6 @@ import {
     XMarkIcon,
     MailIcon,
   } from "@heroicons/react/24/outline";
->>>>>>> Stashed changes
 
 import {
   Dialog,

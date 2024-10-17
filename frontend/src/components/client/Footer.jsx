@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Kottackkal from "../../assets/images/png/footer_kottakkal_hov_bg.png";
-<<<<<<< Updated upstream
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ImageHelper from "../../services/helper";
+
 
 const Footer = () => {
   const [topservices, setTopServices] = useState([]);
+  const [contacts, setContacts] = useState([])
 
   useEffect(() => {
     const fetchTopServices = async () => {
@@ -22,15 +24,6 @@ const Footer = () => {
 
     fetchTopServices();
   }, []);
-
-=======
-import ImageHelper from "../../services/helper";
-import axios from "axios";
-
-
-const Footer = () => {
-  const [contacts, setContacts] = useState([])
-
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -49,7 +42,7 @@ const Footer = () => {
   }, []);
 
 
->>>>>>> Stashed changes
+
   return (
     <div className="bg-white">
       <div className="footer-container max-w-[1380px] mx-auto px-4 py-8">

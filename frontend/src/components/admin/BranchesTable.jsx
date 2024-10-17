@@ -25,6 +25,12 @@ const BranchTable = () => {
   const map = useRef(null);
   const marker = useRef(null);
 
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [currentPage, setCurrentPage] = useState(1); // State for pagination
+  const itemsPerPage = 2; // Number of items per page
+
+  const [filteredBranches, setFilteredBranches] = useState([]);
+
   // Fetch branch data from API
   useEffect(() => {
     const fetchBranch = async () => {
@@ -33,12 +39,26 @@ const BranchTable = () => {
           "http://localhost:4000/api/branch/getbranch"
         );
         setBranch(response.data);
+        setFilteredBranches(response.data);
       } catch (error) {
         console.error("Error fetching branches:", error);
       }
     };
     fetchBranch();
   }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = branch.filter(
+      (b) =>
+        b.place.toLowerCase().includes(query) ||
+        String(b.mobile).toLowerCase().includes(query)
+    );
+    setFilteredBranches(filtered);
+    setCurrentPage(1); // Reset to first page on search
+  };
 
   // Initialize map when the component is mounted or when form state changes
   useEffect(() => {
@@ -188,6 +208,20 @@ const BranchTable = () => {
     }
   };
 
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredBranches.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const totalPages = Math.ceil(filteredBranches.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
@@ -203,6 +237,14 @@ const BranchTable = () => {
         </button>
       </div>
 
+      {/* Search Box */}
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={handleSearch}
+        placeholder="Search By Place Name or Mobile"
+        className="border p-2 w-full mb-4"
+      />
       {showAddForm && (
         <div className="mb-6 p-4 border rounded-md bg-white shadow">
           <h3 className="text-lg font-medium mb-2">Add New Branch</h3>
@@ -310,7 +352,7 @@ const BranchTable = () => {
           </tr>
         </thead>
         <tbody>
-          {branch.map((b) => (
+          {currentItems.map((b) => (
             <tr key={b._id}>
               <td className="py-2 px-4 border-b">{b.place}</td>
               <td className="border-b p-4">
@@ -351,6 +393,22 @@ const BranchTable = () => {
           ))}
         </tbody>
       </table>
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-4 py-2 mx-1 rounded-md ${
+              currentPage === index + 1
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

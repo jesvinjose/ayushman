@@ -15,13 +15,20 @@ const ApplicationsTable = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [currentApplication, setCurrentApplication] = useState(null);
 
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const itemsPerPage = 2; // Number of dutydoctors per page
+  const [filteredApplications, setFilteredApplications] = useState([]);
+
   useEffect(() => {
     const fetchApplications = async () => {
       try {
         const response = await axios.get(
           "http://localhost:4000/api/application/getapplications"
         );
+        console.log(response.data, "<------------applications");
         setApplications(response.data);
+        setFilteredApplications(response.data);
       } catch (error) {
         console.error("Error fetching applications:", error);
       }
@@ -32,7 +39,7 @@ const ApplicationsTable = () => {
         const response = await axios.get(
           "http://localhost:4000/api/job/getjobs"
         );
-        console.log(response.data, "<--------designations");
+        // console.log(response.data, "<--------designations");
         setDesignations(response.data);
       } catch (error) {
         console.error("Error fetching designations:", error);
@@ -42,6 +49,21 @@ const ApplicationsTable = () => {
     fetchApplications();
     fetchDesignations();
   }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = applications.filter(
+      (application) =>
+        application.name.toLowerCase().includes(query) ||
+        application.email.toLowerCase().includes(query) ||
+        application.mobile.toLowerCase().includes(query) ||
+        application.designation.designation.toLowerCase().includes(query)
+    );
+    setFilteredApplications(filtered);
+    setCurrentPage(1); // Reset to first page on search
+  };
 
   const handleAddApplication = async () => {
     if (newName && newEmail && newMobile && newResume && newDesignation) {
@@ -214,11 +236,25 @@ const ApplicationsTable = () => {
     }
   };
 
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredApplications.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const totalPages = Math.ceil(filteredApplications.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold mb-4">Applications</h2>
-        <button
+        {/* <button
           onClick={() => {
             setShowAddForm(!showAddForm);
             setShowEditForm(false);
@@ -226,10 +262,19 @@ const ApplicationsTable = () => {
           className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
         >
           {showAddForm ? "Cancel" : "Add Application"}
-        </button>
+        </button> */}
       </div>
 
-      {showAddForm && (
+      {/* Search Box */}
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={handleSearch}
+        placeholder="Search By Name, Email, Mobile or Designation"
+        className="border p-2 w-full mb-4"
+      />
+
+      {/* {showAddForm && (
         <div className="mb-6 p-4 border rounded-md bg-white shadow">
           <h3 className="text-lg font-medium mb-2">Add New Application</h3>
           <input
@@ -277,9 +322,9 @@ const ApplicationsTable = () => {
             Save Application
           </button>
         </div>
-      )}
+      )} */}
 
-      {showEditForm && currentApplication && (
+      {/* {showEditForm && currentApplication && (
         <div className="mb-6 p-4 border rounded-md bg-white shadow">
           <h3 className="text-lg font-medium mb-2">Edit Application</h3>
           <input
@@ -333,7 +378,7 @@ const ApplicationsTable = () => {
             Cancel
           </button>
         </div>
-      )}
+      )} */}
 
       <table className="w-full bg-white border border-gray-300">
         <thead>
@@ -347,7 +392,7 @@ const ApplicationsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {applications.map((application) => (
+          {currentItems.map((application) => (
             <tr key={application._id}>
               <td className="border p-2">{application.name}</td>
               <td className="border p-2">{application.email}</td>
@@ -383,6 +428,22 @@ const ApplicationsTable = () => {
           ))}
         </tbody>
       </table>
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-4 py-2 mx-1 rounded-md ${
+              currentPage === index + 1
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

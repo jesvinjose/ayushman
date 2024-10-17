@@ -12,9 +12,12 @@ const ContactMessagesTable = () => {
   const [newMobile, setNewMobile] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const [showEditForm, setShowEditForm] = useState(false); // State to control the visibility of the edit form
-  const [currentContactMessage, setCurrentContactMessage] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const itemsPerPage = 2; // Number of messages per page
+  const [filteredMessages, setFilteredMessages] = useState([]); // Ensure this is updated correctly
 
+  // Fetch contact messages
   useEffect(() => {
     const fetchContactMessages = async () => {
       try {
@@ -22,7 +25,8 @@ const ContactMessagesTable = () => {
           "http://localhost:4000/api/contactmessage/getcontactmessages"
         );
         console.log(response.data); // Check the structure of the data
-        setContactMessages(response.data); // Assuming API returns { dutyDoctors: [...] }
+        setContactMessages(response.data); // Set full list of messages
+        setFilteredMessages(response.data); // Set filtered messages to all initially
       } catch (error) {
         console.error("Error fetching contactmessages:", error);
       }
@@ -31,136 +35,109 @@ const ContactMessagesTable = () => {
     fetchContactMessages();
   }, []);
 
-  const handleAddContactMessage = async () => {
-    if (newMessage && newFirstName && newLastName && newEmail && newMobile) {
-      // Create a JSON object for the data
-      const contactMessageData = {
-        firstName: newFirstName,
-        lastName: newLastName,
-        mobile: newMobile,
-        email: newEmail,
-        message: newMessage,
-      };
+  // Handle search and filter messages
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
 
-      try {
-        const response = await axios.post(
-          "http://localhost:4000/api/contactmessage/addcontactmessage",
-          contactMessageData, // Send the JSON object instead of FormData
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-
-        if (response.status === 201) {
-          const addedContactMessage = response.data.contactmessage;
-
-          // Update state with the newly added consultant
-          setContactMessages([...contactmessages, addedContactMessage]);
-          setNewMessage("");
-          setNewFirstName("");
-          setNewLastName("");
-          setNewMobile("");
-          setNewEmail("");
-          setShowAddForm(false);
-        }
-      } catch (error) {
-        console.error("Error adding contactmessage:", error);
-      }
-    }
+    const filtered = contactmessages.filter((contactmessage) => {
+      return (
+        contactmessage.firstName.toLowerCase().includes(query) ||
+        contactmessage.lastName.toLowerCase().includes(query) ||
+        contactmessage.email.toLowerCase().includes(query) ||
+        contactmessage.mobile.toLowerCase().includes(query) ||
+        contactmessage.message.toLowerCase().includes(query)
+      );
+    });
+    setFilteredMessages(filtered);
+    setCurrentPage(1); // Reset to first page after search
   };
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredMessages.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredMessages.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // const handleAddContactMessage = async () => {
+  //   if (newMessage && newFirstName && newLastName && newEmail && newMobile) {
+  //     const contactMessageData = {
+  //       firstName: newFirstName,
+  //       lastName: newLastName,
+  //       mobile: newMobile,
+  //       email: newEmail,
+  //       message: newMessage,
+  //     };
+
+  //     try {
+  //       const response = await axios.post(
+  //         "http://localhost:4000/api/contactmessage/addcontactmessage",
+  //         contactMessageData,
+  //         {
+  //           headers: { "Content-Type": "application/json" },
+  //         }
+  //       );
+
+  //       if (response.status === 201) {
+  //         const addedContactMessage = response.data.contactmessage;
+  //         setContactMessages([...contactmessages, addedContactMessage]);
+  //         setFilteredMessages([...contactmessages, addedContactMessage]); // Update filteredMessages as well
+  //         setNewMessage("");
+  //         setNewFirstName("");
+  //         setNewLastName("");
+  //         setNewMobile("");
+  //         setNewEmail("");
+  //         setShowAddForm(false);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error adding contactmessage:", error);
+  //     }
+  //   }
+  // };
 
   const handleDelete = async (id) => {
     try {
       await axios.delete(
         `http://localhost:4000/api/contactmessage/deletecontactmessage/${id}`
       );
-      setContactMessages(
-        contactmessages.filter((contactmessage) => contactmessage._id !== id)
+      const updatedMessages = contactmessages.filter(
+        (contactmessage) => contactmessage._id !== id
       );
+      setContactMessages(updatedMessages);
+      setFilteredMessages(updatedMessages); // Ensure filteredMessages are also updated
     } catch (error) {
       console.error("Error deleting contactmessage:", error);
     }
   };
 
-  const handleCancel = () => {
-    setCurrentContactMessage(null);
-    setShowEditForm(false);
-    setNewMessage("");
-    setNewFirstName("");
-    setNewLastName("");
-    setNewMobile("");
-    setNewEmail("");
-  };
-
-  const handleEdit = (contactmessage) => {
-    setCurrentContactMessage(contactmessage); // Set the current doctor to be edited
-    setShowEditForm(true); // Show the edit form
-    setShowAddForm(false); // Hide the add form if it is open
-  };
-
-  const handleUpdateContactMessage = async () => {
-    if (currentContactMessage) {
-      // Create a JSON object for the data
-      const contactMessageData = {
-        firstName: newFirstName || currentContactMessage.firstName,
-        lastName: newLastName || currentContactMessage.lastName,
-        email: newEmail || currentContactMessage.email,
-        mobile: newMobile || currentContactMessage.mobile,
-        message: newMessage || currentContactMessage.message,
-      };
-
-      try {
-        const response = await axios.put(
-          `http://localhost:4000/api/contactmessage/updatecontactmessage/${currentContactMessage._id}`,
-          contactMessageData,
-          {
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-
-        if (response.status === 200) {
-          const updatedContactMessage = response.data.contactmessage;
-
-          setContactMessages(
-            contactmessages.map((contactmessage) =>
-              contactmessage._id === updatedContactMessage._id
-                ? updatedContactMessage
-                : contactmessage
-            )
-          );
-
-          setCurrentContactMessage(null); // Clear the current job state
-          setShowEditForm(false); // Hide the edit form
-          setNewMessage("");
-          setNewFirstName("");
-          setNewLastName("");
-          setNewMobile("");
-          setNewEmail("");
-        }
-      } catch (error) {
-        console.error("Error updating contactmessage:", error);
-      }
-    }
-  };
-
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-4">
+      {/* <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">Messages</h2>
         <button
-          onClick={() => {
-            setShowAddForm(!showAddForm);
-            setShowEditForm(false); // Ensure the Edit form is closed
-          }}
+          onClick={() => setShowAddForm(!showAddForm)}
           className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
         >
           {showAddForm ? "Cancel" : "Add Message"}
         </button>
-      </div>
+      </div> */}
 
-      {showAddForm && (
+      {/* Search Box */}
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={handleSearch}
+        placeholder="Search Messages"
+        className="border p-2 w-full mb-4"
+      />
+
+      {/* {showAddForm && (
         <div className="mb-6 p-4 border rounded-md bg-white shadow">
-          <h3 className="text-lg font-medium mb-2">Add New Job</h3>
+          <h3 className="text-lg font-medium mb-2">Add New Message</h3>
           <input
             type="text"
             placeholder="First Name"
@@ -204,60 +181,7 @@ const ContactMessagesTable = () => {
             Save Message
           </button>
         </div>
-      )}
-
-      {showEditForm && currentContactMessage && (
-        <div className="mb-6 p-4 border rounded-md bg-white shadow">
-          <h3 className="text-lg font-medium mb-2">Edit Message</h3>
-          <input
-            type="text"
-            placeholder={currentContactMessage.firstName}
-            value={newFirstName}
-            onChange={(e) => setNewFirstName(e.target.value)}
-            className="border p-2 w-full mb-4"
-          />
-          <input
-            type="text"
-            placeholder={currentContactMessage.lastName}
-            value={newLastName}
-            onChange={(e) => setNewLastName(e.target.value)}
-            className="border p-2 w-full mb-4"
-          />
-          <input
-            type="text"
-            placeholder={currentContactMessage.email}
-            value={newEmail}
-            onChange={(e) => setNewEmail(e.target.value)}
-            className="border p-2 w-full mb-4"
-          />
-          <input
-            type="text"
-            placeholder={currentContactMessage.mobile}
-            value={newMobile}
-            onChange={(e) => setNewMobile(e.target.value)}
-            className="border p-2 w-full mb-4"
-          />
-          <input
-            type="text"
-            placeholder={currentContactMessage.message}
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            className="border p-2 w-full mb-4"
-          />
-          <button
-            onClick={handleUpdateContactMessage}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-          >
-            Update Message
-          </button>
-          <button
-            onClick={handleCancel}
-            className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 my-2 sm:my-0 sm:ml-4"
-          >
-            Cancel
-          </button>
-        </div>
-      )}
+      )} */}
 
       <table className="w-full border-collapse">
         <thead>
@@ -271,7 +195,7 @@ const ContactMessagesTable = () => {
           </tr>
         </thead>
         <tbody>
-          {contactmessages.map((contactmessage) => (
+          {currentItems.map((contactmessage) => (
             <tr key={contactmessage._id}>
               <td className="border px-4 py-2">{contactmessage.firstName}</td>
               <td className="border px-4 py-2">{contactmessage.lastName}</td>
@@ -279,12 +203,6 @@ const ContactMessagesTable = () => {
               <td className="border px-4 py-2">{contactmessage.mobile}</td>
               <td className="border px-4 py-2">{contactmessage.message}</td>
               <td className="border px-4 py-2">
-                {/* <button
-                  onClick={() => handleEdit(contactmessage)}
-                  className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 mr-2"
-                >
-                  Edit
-                </button> */}
                 <button
                   onClick={() => handleDelete(contactmessage._id)}
                   className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
@@ -296,6 +214,23 @@ const ContactMessagesTable = () => {
           ))}
         </tbody>
       </table>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-4 py-2 mx-1 rounded-md ${
+              currentPage === index + 1
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

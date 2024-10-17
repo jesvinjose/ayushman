@@ -12,6 +12,11 @@ const JobPostingsTable = () => {
   const [showEditForm, setShowEditForm] = useState(false); // State to control the visibility of the edit form
   const [currentJob, setCurrentJob] = useState(null);
 
+  const [filteredJobs, setFilteredJobs] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const itemsPerPage = 2; // Number of dutydoctors per page
+
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -20,6 +25,7 @@ const JobPostingsTable = () => {
         );
         console.log(response.data); // Check the structure of the data
         setJobs(response.data); // Assuming API returns { dutyDoctors: [...] }
+        setFilteredJobs(response.data);
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
@@ -84,10 +90,10 @@ const JobPostingsTable = () => {
 
   const handleUpdateJob = async () => {
     if (currentJob) {
-       // Create a JSON object for the data
-       const jobData = {
-        designation: newJobDesignation||currentJob.designation,
-        jobvacancies: newJobVacancies||currentJob.jobvacancies,
+      // Create a JSON object for the data
+      const jobData = {
+        designation: newJobDesignation || currentJob.designation,
+        jobvacancies: newJobVacancies || currentJob.jobvacancies,
       };
 
       try {
@@ -117,6 +123,31 @@ const JobPostingsTable = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+  
+    const filtered = jobs.filter(
+      (job) =>
+        String(job.jobvacancies).toLowerCase().includes(query) || // Convert jobvacancies to a string
+        job.designation.toLowerCase().includes(query)
+    );
+    setFilteredJobs(filtered);
+    setCurrentPage(1); // Reset to first page on search
+  };
+  
+
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredJobs.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
@@ -131,6 +162,15 @@ const JobPostingsTable = () => {
           {showAddForm ? "Cancel" : "Add Job"}
         </button>
       </div>
+
+      {/* Search Box */}
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={handleSearch}
+        placeholder="Search By designation or jobvacancies"
+        className="border p-2 w-full mb-4"
+      />
 
       {showAddForm && (
         <div className="mb-6 p-4 border rounded-md bg-white shadow">
@@ -199,7 +239,7 @@ const JobPostingsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {jobs.map((job) => (
+          {currentItems.map((job) => (
             <tr key={job._id}>
               <td className="border px-4 py-2">{job.designation}</td>
               <td className="border px-4 py-2">{job.jobvacancies}</td>
@@ -221,6 +261,22 @@ const JobPostingsTable = () => {
           ))}
         </tbody>
       </table>
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-4 py-2 mx-1 rounded-md ${
+              currentPage === index + 1
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

@@ -14,6 +14,11 @@ const DutyDoctorsTable = () => {
   const [showEditForm, setShowEditForm] = useState(false); // State to control the visibility of the edit form
   const [currentDutyDoctor, setCurrentDutyDoctor] = useState(null);
 
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const itemsPerPage = 2; // Number of dutydoctors per page
+  const [filteredDoctors, setFilteredDoctors] = useState([]);
+
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -22,6 +27,7 @@ const DutyDoctorsTable = () => {
         );
         console.log(response.data); // Check the structure of the data
         setDoctors(response.data); // Assuming API returns { dutyDoctors: [...] }
+        setFilteredDoctors(response.data);
       } catch (error) {
         console.error("Error fetching duty doctors:", error);
       }
@@ -29,6 +35,19 @@ const DutyDoctorsTable = () => {
 
     fetchDoctors();
   }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = doctors.filter(
+      (doctor) =>
+        doctor.name.toLowerCase().includes(query) ||
+        doctor.qualification.toLowerCase().includes(query)
+    );
+    setFilteredDoctors(filtered);
+    setCurrentPage(1); // Reset to first page on search
+  };
 
   const handleImageUpload = (e) => {
     setNewDoctorImage(e.target.files[0]);
@@ -135,6 +154,17 @@ const DutyDoctorsTable = () => {
     }
   };
 
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredDoctors.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredDoctors.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
@@ -149,6 +179,15 @@ const DutyDoctorsTable = () => {
           {showAddForm ? "Cancel" : "Add Duty Doctor"}
         </button>
       </div>
+
+      {/* Search Box */}
+      <input
+        type="text"
+        value={searchQuery}
+        onChange={handleSearch}
+        placeholder="Search By Name or Qualification"
+        className="border p-2 w-full mb-4"
+      />
 
       {showAddForm && (
         <div className="mb-6 p-4 border rounded-md bg-white shadow">
@@ -230,7 +269,7 @@ const DutyDoctorsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {doctors.map((doctor) => (
+          {currentItems.map((doctor) => (
             <tr key={doctor._id}>
               <td className="border px-4 py-2">
                 <ImageHelper size="200px" image={doctor.image} />
@@ -255,6 +294,22 @@ const DutyDoctorsTable = () => {
           ))}
         </tbody>
       </table>
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => handlePageChange(index + 1)}
+            className={`px-4 py-2 mx-1 rounded-md ${
+              currentPage === index + 1
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

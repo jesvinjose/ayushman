@@ -3,7 +3,7 @@ import careerBg from "../../assets/images/png/career-bg.png";
 import greenLeaves from "../../assets/images/png/leaf.webp";
 import axios from "axios";
 import placeholderImage from "../../assets/images/png/no-vacancy.png"; // Update this path accordingly
-
+import { BaseURL } from "../../BaseUrl";
 function Career() {
   const [jobs, setJobs] = useState([]);
   const [designations, setDesignations] = useState([]);
@@ -20,7 +20,7 @@ function Career() {
     const fetchJobs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/job/getjobs"
+          `${BaseURL}/api/job/getjobs`
         );
 
         // Set the jobs data
@@ -62,7 +62,7 @@ function Career() {
 
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/application/addapplication",
+          `${BaseURL}/api/application/addapplication`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },

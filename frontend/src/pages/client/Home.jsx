@@ -23,6 +23,7 @@ import testimonialThree from "../../assets/images/png/testimonialThree.webp";
 
 import axios from "axios";
 import ImageHelper from "../../services/helper";
+import { BaseURL } from "../../BaseUrl";
 
 function Home() {
   const [backgroundImage, setBackgroundImage] = useState(bookingBg);
@@ -64,7 +65,7 @@ function Home() {
     const fetchTreatments = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/treatment/gettreatments"
+          `${BaseURL}/api/treatment/gettreatments`
         );
         console.log(response.data); // Check the structure of the data
         setTreatments(response.data); // Assuming API returns { treatments: [...] }
@@ -79,7 +80,7 @@ function Home() {
     const fetchDoctors = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/dutydoctor/getdutydoctors"
+          `${BaseURL}/api/dutydoctor/getdutydoctors`
         );
         console.log(response.data); // Check the structure of the data
         setDutyDoctors(response.data); // Assuming API returns { dutyDoctors: [...] }
@@ -96,7 +97,7 @@ function Home() {
     const fetchBranch = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/branch/getbranch"
+          `${BaseURL}/api/branch/getbranch`
         );
         setBranch(response.data);
       } catch (error) {
@@ -204,7 +205,7 @@ function Home() {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/booking/registerbooking",
+        `${BaseURL}/api/booking/registerbooking`,
         formData
       );
 
@@ -240,7 +241,7 @@ function Home() {
     const fetchTestimonials = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/testimonial/gettestimonials"
+          `${BaseURL}/api/testimonial/gettestimonials`
         );
         setTestimonials(response.data);
       } catch (error) {
@@ -282,7 +283,7 @@ function Home() {
                 Wellness
               </p>
               <p className="text-[14px] text-[#454545] text-center pt-2 pb-3 mb-4">
-                Ayushman centers are unique <br /> ayurvedic treatment centers.
+              Green Leaf Ayurveda Wellness centers are unique <br /> ayurvedic treatment centers.
               </p>
             </div>
           </div>
@@ -355,10 +356,10 @@ function Home() {
             {/* Left Section - Text Content */}
             <div className="bg-white shadow rounded-lg flex flex-col justify-center p-6 w-full h-auto lg:flex-1">
               <h1 className="text-green-800 font-bold text-2xl lg:text-3xl mb-4">
-                Welcome to <br /> Ayushman Ayurveda
+                Welcome to Green Leaf<br /> Ayurveda Wellness Centre
               </h1>
               <p className="text-gray-700 text-sm lg:text-base">
-                Ayushman centres are unique ayurvedic treatment centres with
+              Green Leaf Ayurveda Wellness centres are unique ayurvedic treatment centres with
                 excellent facilities for rendering all kinds of Ayurvedic
                 treatments. Eminent doctors as well as trained paramedical staff
                 provide maximum care to the customers. Our centres offer expert
@@ -396,7 +397,7 @@ function Home() {
                 <img
                   className="w-full h-full object-cover rounded-lg"
                   src={video_image}
-                  alt="Ayushman Video Thumbnail"
+                  alt="Green Leaf Ayurveda Wellness Centre Video Thumbnail"
                 />
               </a>
             </div>

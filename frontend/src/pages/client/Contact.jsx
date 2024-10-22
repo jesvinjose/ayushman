@@ -5,6 +5,7 @@ import map from "../../assets/images/png/map.svg";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ImageHelper from "../../services/helper";
+import { BaseURL } from "../../BaseUrl";
 
 function Contact() {
   const [messageData, setMessageData] = useState({
@@ -30,7 +31,7 @@ function Contact() {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/contactmessage/addcontactmessage",
+        `${BaseURL}/api/contactmessage/addcontactmessage`,
         {
           firstName: messageData.firstName,
           lastName: messageData.lastName,
@@ -70,7 +71,7 @@ function Contact() {
     const fetchBranch = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/branch/getbranch"
+          `${BaseURL}/api/branch/getbranch`
         );
         setBranch(response.data);
       } catch (error) {

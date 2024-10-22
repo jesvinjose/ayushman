@@ -29,8 +29,6 @@ app.use(express.json());
 
 const adminRoute = require("./routes/adminRoutes");
 
-const contactDetailsRoute = require("./routes/contactDetails");
-
 const treatmentRoute = require("./routes/treatmentRoutes");
 const consultantRoute = require("./routes/consultantRoutes");
 const jobRoute = require("./routes/jobRoutes");
@@ -39,8 +37,9 @@ const applicationRoute = require("./routes/applicationRoutes");
 const contactMessageRoute = require("./routes/contactMessageRoutes");
 const branchRoute = require("./routes/branchRoutes");
 const bookingRoute = require("./routes/bookingRoutes");
-const topServiceRoute=require("./routes/topServiceRoutes");
-const testimonialRoute=require("./routes/testimonialRoutes");
+const topServiceRoute = require("./routes/topServiceRoutes");
+const testimonialRoute = require("./routes/testimonialRoutes");
+const contactDetailsRoute = require("./routes/contactDetailsRoutes");
 
 app.use("/api/admin", adminRoute);
 app.use("/api/treatment", treatmentRoute);
@@ -49,13 +48,11 @@ app.use("/api/job", jobRoute);
 app.use("/api/dutydoctor", dutyDoctorRoute);
 app.use("/api/application", applicationRoute);
 app.use("/api/contactmessage", contactMessageRoute);
-
-app.use("/api/contactdetails", contactDetailsRoute);
-
 app.use("/api/branch", branchRoute);
 app.use("/api/booking", bookingRoute);
-app.use("/api/topservice",topServiceRoute);
-app.use("/api/testimonial",testimonialRoute)
+app.use("/api/topservice", topServiceRoute);
+app.use("/api/testimonial", testimonialRoute);
+app.use("/api/contactdetails", contactDetailsRoute);
 
 // Basic route
 app.get("/", (req, res) => {

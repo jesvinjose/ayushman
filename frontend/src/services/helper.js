@@ -1,29 +1,33 @@
+import { BaseURL } from "../BaseUrl";
+
 // const ImageHelper = ({ image, size = 60 }) => {
 //   return (
-//     //   <img
-//     //     src={`http://localhost:4000/${image}`}
-//     //     width={size}
+      // <img
+      //   src={`${BaseURL}/${image}`}
+      //   width={size}
 
-//     //     className="border border-primary p-[2px] rounded-full"
-//     //     style={{ height: size }}
-//     //   />
+      //   className="border border-primary p-[2px] object-cover rounded-lg"
+      //   style={{ height: size }}
+      // />
 
-//     <img
-//       src={`http://localhost:4000/${image
-//         .replaceAll("\\", "/")
-//         .replaceAll("public/", "")}`}
-//       className="object-cover rounded-lg"
-//     />
+    // <img
+    //   src={`${BaseURL}/${image
+    //     .replaceAll("\\", "/")
+    //     .replaceAll("public/", "")}`}
+    //   className="object-cover rounded-lg"
+    // />
 //   );
 // };
 
 // export default ImageHelper;
 
+
+
 const ImageHelper = ({ image, size = 60, width }) => {
   // Check if the image exists, otherwise provide a default or fallback image
   const processedImage = image
-    ? `http://localhost:4000/${image.replaceAll("\\", "/").replaceAll("public/", "")}`
-    : "default_image.webp"; // Provide a default image or a placeholder
+    ? `${BaseURL}/${image.replaceAll("\\", "/").replaceAll("public/", "")}`
+    : "default_image.png"; // Provide a default image or a placeholder
 
   return (
     <img
@@ -36,4 +40,3 @@ const ImageHelper = ({ image, size = 60, width }) => {
 };
 
 export default ImageHelper;
-

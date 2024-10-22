@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+import { BaseURL } from "../../BaseUrl";
+
 const BookingsTable = () => {
   const [bookings, setBookings] = useState([]);
   // Form state for input fields
@@ -48,7 +50,7 @@ const BookingsTable = () => {
     const fetchTreatments = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/treatment/gettreatments"
+          `${BaseURL}/api/treatment/gettreatments`
         );
         console.log(response.data); // Check the structure of the data
         setTreatments(response.data); // Assuming API returns { treatments: [...] }
@@ -64,7 +66,7 @@ const BookingsTable = () => {
     const fetchBranch = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/branch/getbranch"
+          `${BaseURL}/api/branch/getbranch`
         );
         setBranch(response.data);
       } catch (error) {
@@ -77,7 +79,7 @@ const BookingsTable = () => {
   const fetchBookings = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/booking/getbookings"
+        `${BaseURL}/api/booking/getbookings`
       );
       setBookings(response.data);
     } catch (error) {
@@ -126,7 +128,7 @@ const BookingsTable = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/booking/registerbooking",
+        `${BaseURL}/api/booking/registerbooking`,
         formData
       );
 
@@ -159,7 +161,7 @@ const BookingsTable = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:4000/api/booking/deletebooking/${id}`
+        `${BaseURL}/api/booking/deletebooking/${id}`
       );
       setBookings(bookings.filter((booking) => booking._id !== id));
     } catch (error) {

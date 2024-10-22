@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ImageHelper from "../../services/helper";
 
+import { BaseURL } from "../../BaseUrl";
+
 const DutyDoctorsTable = () => {
   const [doctors, setDoctors] = useState([]);
   const [newDoctorName, setNewDoctorName] = useState("");
@@ -23,7 +25,7 @@ const DutyDoctorsTable = () => {
     const fetchDoctors = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/dutydoctor/getdutydoctors"
+          `${BaseURL}/api/dutydoctor/getdutydoctors`
         );
         console.log(response.data); // Check the structure of the data
         setDoctors(response.data); // Assuming API returns { dutyDoctors: [...] }
@@ -62,7 +64,7 @@ const DutyDoctorsTable = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/dutydoctor/adddutydoctor",
+          `${BaseURL}/api/dutydoctor/adddutydoctor`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -88,7 +90,7 @@ const DutyDoctorsTable = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:4000/api/dutydoctor/deletedutydoctor/${id}`
+        `${BaseURL}/api/dutydoctor/deletedutydoctor/${id}`
       );
       setDoctors(doctors.filter((doctor) => doctor._id !== id));
     } catch (error) {
@@ -126,7 +128,7 @@ const DutyDoctorsTable = () => {
 
       try {
         const response = await axios.put(
-          `http://localhost:4000/api/dutydoctor/updatedutydoctor/${currentDutyDoctor._id}`,
+          `${BaseURL}/api/dutydoctor/updatedutydoctor/${currentDutyDoctor._id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },

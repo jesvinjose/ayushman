@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+import { BaseURL } from "../../BaseUrl";
+
 const ContactMessagesTable = () => {
   const [contactmessages, setContactMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -22,7 +24,7 @@ const ContactMessagesTable = () => {
     const fetchContactMessages = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/contactmessage/getcontactmessages"
+          `${BaseURL}/api/contactmessage/getcontactmessages`
         );
         console.log(response.data); // Check the structure of the data
         setContactMessages(response.data); // Set full list of messages
@@ -102,7 +104,7 @@ const ContactMessagesTable = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:4000/api/contactmessage/deletecontactmessage/${id}`
+        `${BaseURL}/api/contactmessage/deletecontactmessage/${id}`
       );
       const updatedMessages = contactmessages.filter(
         (contactmessage) => contactmessage._id !== id

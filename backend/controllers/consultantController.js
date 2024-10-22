@@ -2,7 +2,9 @@ const Consultant = require("../models/consultantModel");
 
 const addConsultant = async (req, res) => {
   try {
-    const { name, qualification } = req.body;
+    const { name, qualification, availableDays, availableTiming } = req.body;
+
+    console.log(req.body, "<------------req.body");
 
     // Check if an image file was uploaded
     if (!req.file) {
@@ -17,6 +19,8 @@ const addConsultant = async (req, res) => {
       name,
       qualification,
       image: imagePath,
+      availableDays,
+      availableTiming,
     });
 
     // Save the consultant to the database
@@ -54,7 +58,7 @@ const deleteConsultant = async (req, res) => {
     // Find the consultant by ID and delete
     const deletedConsultant = await Consultant.findByIdAndDelete(id);
     // console.log(deleteConsultant,'<------------deleteConsultant');
-    
+
     // If consultant not found, return an error response
     if (!deletedConsultant) {
       return res.status(404).json({ message: "Consultant not found." });
@@ -70,28 +74,29 @@ const deleteConsultant = async (req, res) => {
   }
 };
 
-
 const updateConsultant = async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, qualification } = req.body;
+    const { name, qualification, availableDays, availableTiming } = req.body;
 
     // Fetch the existing consultant to get the current image path
     const existingConsultant = await Consultant.findById(id);
-    
+
     if (!existingConsultant) {
       return res.status(404).json({ message: "Consultant not found." });
     }
 
     // Prepare the updated data
-    let updatedData = { 
-      name, 
+    let updatedData = {
+      name,
       qualification,
-      image: existingConsultant.image // Set the existing image by default
+      image: existingConsultant.image, // Set the existing image by default
+      availableDays,
+      availableTiming,
     };
 
     // console.log(updatedData);
-    
+
     // Check if a new image file was uploaded
     if (req.file) {
       const imagePath = req.file.path;
@@ -106,14 +111,16 @@ const updateConsultant = async (req, res) => {
     );
 
     // console.log(updatedConsultant);
-    
+
     res.status(200).json({
       message: "Consultant updated successfully",
       consultant: updatedConsultant,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to update consultant", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to update consultant", error: error.message });
   }
 };
 
@@ -121,5 +128,5 @@ module.exports = {
   addConsultant,
   getConsultants,
   deleteConsultant,
-  updateConsultant
+  updateConsultant,
 };

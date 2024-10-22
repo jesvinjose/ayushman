@@ -6,6 +6,8 @@ import mapboxgl from "mapbox-gl";
 import ImageHelper from "../../services/helper";
 import "mapbox-gl/dist/mapbox-gl.css";
 
+import { BaseURL } from "../../BaseUrl";
+
 const BranchTable = () => {
   const [branch, setBranch] = useState([]);
   const [newBranch, setNewBranch] = useState("");
@@ -36,7 +38,7 @@ const BranchTable = () => {
     const fetchBranch = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/branch/getbranch"
+          `${BaseURL}/api/branch/getbranch`
         );
         setBranch(response.data);
         setFilteredBranches(response.data);
@@ -127,7 +129,7 @@ const BranchTable = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/branch/addbranch",
+          `${BaseURL}/api/branch/addbranch`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -166,7 +168,7 @@ const BranchTable = () => {
 
       try {
         const response = await axios.put(
-          `http://localhost:4000/api/branch/updatebranch/${currentBranch._id}`,
+          `${BaseURL}/api/branch/updatebranch/${currentBranch._id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -201,7 +203,7 @@ const BranchTable = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/api/branch/deletebranch/${id}`);
+      await axios.delete(`${BaseURL}/api/branch/deletebranch/${id}`);
       setBranch(branch.filter((b) => b._id !== id));
     } catch (error) {
       console.error("Error deleting branch:", error);

@@ -4,6 +4,7 @@ import rightArrow from "../../assets/images/png/right-arrow-dark-green.png";
 import { Link, useParams } from "react-router-dom";
 import ImageHelper from "../../services/helper";
 import axios from "axios";
+import { BaseURL } from "../../BaseUrl";
 
 function SingleTherapy() {
   const { id } = useParams(); // Get the ID from the URL
@@ -13,7 +14,7 @@ function SingleTherapy() {
     const fetchTreatment = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/treatment/getsingletreatment/${id}`
+          `${BaseURL}/api/treatment/getsingletreatment/${id}`
         );
         setTreatment(response.data.treatment); // Set the fetched treatment data
       } catch (error) {
@@ -31,7 +32,7 @@ function SingleTherapy() {
     const fetchTreatments = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/treatment/gettreatments"
+          `${BaseURL}/api/treatment/gettreatments`
         );
         console.log(response.data); // Check the structure of the data
         setTreatments(response.data); // Assuming API returns { treatments: [...] }

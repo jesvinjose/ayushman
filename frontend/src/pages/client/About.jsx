@@ -2,7 +2,6 @@ import React from "react";
 import aboutBg from "../../assets/images/png/about-bg.png";
 import greenLeaves from "../../assets/images/png/leaf.webp";
 
-
 const About = () => {
   return (
     <div
@@ -23,27 +22,29 @@ const About = () => {
             borderRadius: "5px",
           }}
         >
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">About Us</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+            About Us
+          </h1>
         </div>
 
-        {/* Ayushman Ayurveda Section */}
+        {/* Green Leaf Ayurveda Wellness Centre Section */}
         <div className="visiting-consultants-container mb-12">
           <h2
             className="text-2xl font-semibold text-green-700 mb-4"
             style={{ textAlign: "center" }}
           >
-            Ayushman Ayurveda
+            Green Leaf Ayurveda Wellness Centre
           </h2>
           <p className="text-gray-600 leading-relaxed">
             Bringing the pure essence of Ayurveda; 'the science of life'
             directly into your lives, for you to experience nature's way of
             healing. Presenting you the sacred way towards wellness written in
-            the Vedas in an advanced form. Ayushman accompany you with the same
-            quintessence of the ancient methods and practices of Ayurvedic
-            treatment. We have proven excellence in delivering Ayurvedic
-            treatment in a way our clients are delighted by the services.
-            Equipped with prestigious doctors, exquisite facilities, we assure
-            our clients an ecstatic healing experience.
+            the Vedas in an advanced form. Green Leaf Ayurveda Wellness Centre
+            accompany you with the same quintessence of the ancient methods and
+            practices of Ayurvedic treatment. We have proven excellence in
+            delivering Ayurvedic treatment in a way our clients are delighted by
+            the services. Equipped with prestigious doctors, exquisite
+            facilities, we assure our clients an ecstatic healing experience.
           </p>
         </div>
 
@@ -56,7 +57,7 @@ const About = () => {
             Management Team
           </h2>
           <p className="text-gray-600 leading-relaxed mb-4">
-            Ayushman Ayurvedic treatment centers are unique and distinct. We
+            Green Leaf Ayurveda Wellness Centres are unique and distinct. We
             have excellent facilities for rendering all kinds of treatments.
             Eminent doctors as well as trained paramedical staff provide maximum
             care to our customers. Our centers offer expert consultation
@@ -70,13 +71,13 @@ const About = () => {
             other authentic medicines.
           </p>
           <p className="text-gray-600 leading-relaxed mb-0">
-            Ayushman offers Kerala specialty treatments like Panchakarma
-            (Five-fold therapy), Oil massages, Rasayana Chiktsa, etc. The
-            therapy centers are not meant for diseases alone, but for others
-            too, who may benefit in many ways by nourishing the body,
-            revitalizing the nervous system, overcoming fatigue, promoting sound
-            sleep, improving complexion, enhancing immunity, and revitalizing
-            the whole body.
+            Green Leaf Ayurveda Wellness Centre offers Kerala specialty
+            treatments like Panchakarma (Five-fold therapy), Oil massages,
+            Rasayana Chiktsa, etc. The therapy centers are not meant for
+            diseases alone, but for others too, who may benefit in many ways by
+            nourishing the body, revitalizing the nervous system, overcoming
+            fatigue, promoting sound sleep, improving complexion, enhancing
+            immunity, and revitalizing the whole body.
           </p>
         </div>
       </div>

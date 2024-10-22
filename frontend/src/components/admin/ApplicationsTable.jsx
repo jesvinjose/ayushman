@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { BaseURL } from "../../BaseUrl";
 
 const ApplicationsTable = () => {
   const [applications, setApplications] = useState([]);
@@ -24,7 +25,7 @@ const ApplicationsTable = () => {
     const fetchApplications = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/application/getapplications"
+          `${BaseURL}/api/application/getapplications`
         );
         console.log(response.data, "<------------applications");
         setApplications(response.data);
@@ -37,7 +38,7 @@ const ApplicationsTable = () => {
     const fetchDesignations = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/job/getjobs"
+          `${BaseURL}/api/job/getjobs`
         );
         // console.log(response.data, "<--------designations");
         setDesignations(response.data);
@@ -76,7 +77,7 @@ const ApplicationsTable = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/application/addapplication",
+          `${BaseURL}/api/application/addapplication`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -125,7 +126,7 @@ const ApplicationsTable = () => {
 
     try {
       await axios.delete(
-        `http://localhost:4000/api/application/deleteApplication/${id}`
+        `${BaseURL}/api/application/deleteApplication/${id}`
       );
       setApplications(applications.filter((app) => app._id !== id));
     } catch (error) {
@@ -170,7 +171,7 @@ const ApplicationsTable = () => {
 
       try {
         const response = await axios.put(
-          `http://localhost:4000/api/application/updateapplication/${currentApplication._id}`,
+          `${BaseURL}/api/application/updateapplication/${currentApplication._id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -227,7 +228,7 @@ const ApplicationsTable = () => {
       console.log("Trimmed Path:", trimmedPath);
 
       // Construct the URL
-      const url = `http://localhost:4000/api/application/download/resumes/${trimmedPath}`;
+      const url = `${BaseURL}/api/application/download/resumes/${trimmedPath}`;
       window.open(url, "_blank");
     } else {
       console.error("resumePath does not contain the base path:", basePath);

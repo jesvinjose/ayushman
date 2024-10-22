@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+import { BaseURL } from "../../BaseUrl";
+
 const JobPostingsTable = () => {
   const [jobs, setJobs] = useState([]);
   const [newJobDesignation, setNewJobDesignation] = useState("");
@@ -21,7 +23,7 @@ const JobPostingsTable = () => {
     const fetchJobs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/job/getjobs"
+          `${BaseURL}/api/job/getjobs`
         );
         console.log(response.data); // Check the structure of the data
         setJobs(response.data); // Assuming API returns { dutyDoctors: [...] }
@@ -44,7 +46,7 @@ const JobPostingsTable = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/job/addjob",
+          `${BaseURL}/api/job/addjob`,
           jobData, // Send the JSON object instead of FormData
           {
             headers: { "Content-Type": "application/json" },
@@ -68,7 +70,7 @@ const JobPostingsTable = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/api/job/deletejob/${id}`);
+      await axios.delete(`${BaseURL}/api/job/deletejob/${id}`);
       setJobs(jobs.filter((job) => job._id !== id));
     } catch (error) {
       console.error("Error deleting job:", error);
@@ -98,7 +100,7 @@ const JobPostingsTable = () => {
 
       try {
         const response = await axios.put(
-          `http://localhost:4000/api/job/updatejob/${currentJob._id}`,
+          `${BaseURL}/api/job/updatejob/${currentJob._id}`,
           jobData,
           {
             headers: { "Content-Type": "application/json" },

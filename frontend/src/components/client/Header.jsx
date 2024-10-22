@@ -6,23 +6,28 @@ import closeIcon from "../../assets/images/png/close_icon.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ImageHelper from "../../services/helper";
+import { BaseURL } from "../../BaseUrl";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [treatments, setTreatments] = useState([]);
-  const [contacts, setContacts] = useState([])
+  const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
     const fetchContacts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/contactdetails/getcontacts"
+          `${BaseURL}/api/contactdetails/getcontacts`
         );
-        console.log(response.data[0],"my image");
-        
-        setContacts(response.data[0]);
+        console.log(response.data[0], "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,,");
+
+        if (response.data && response.data.length > 0) {
+          setContacts(response.data[0]); // Assuming you need the first contact only
+        } else {
+          console.log("No contacts found");
+        }
       } catch (error) {
         console.error("Error fetching contacts:", error);
       }
@@ -35,7 +40,7 @@ const Header = () => {
     const fetchTreatments = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/treatment/gettreatments"
+          `${BaseURL}/api/treatment/gettreatments`
         );
         console.log(response.data); // Check the structure of the data
         setTreatments(response.data); // Assuming API returns { treatments: [...] }
@@ -49,8 +54,18 @@ const Header = () => {
   return (
     <div className="nav-wrapper bg-white shadow-md">
       <div className="nav-wrapper-content flex justify-between items-center p-4">
+        {/* {contacts?.image ? ( */}
         <Link to="/">
-          <ImageHelper  image={contacts.image} size="80px" width="80px" className="w-24" />
+          {contacts?.image ? (
+            <ImageHelper
+              image={contacts.image}
+              size="80px"
+              width="80px"
+              className="w-24"
+            />
+          ) : (
+            <p>logo</p>
+          )}
         </Link>
         <ul
           className="nav-list hidden md:flex space-x-8"
@@ -75,9 +90,11 @@ const Header = () => {
                 {treatments.map((treatment) => {
                   return (
                     <li>
-                      <Link to={`/treatment/${treatment._id}`}>
-                        {treatment.name}
-                      </Link>
+                      <button className="bg-green-300 text-white rounded-md hover:bg-green-900 transition w-full">
+                        <Link to={`/treatment/${treatment._id}`}  onClick={() => setIsDropdownOpen(false)}>
+                          {treatment.name}
+                        </Link>
+                      </button>
                     </li>
                   );
                 })}
@@ -125,7 +142,9 @@ const Header = () => {
               </li>
               <li className="nav-items-mob">
                 {/* <a href="https://www.ayushmanayurvedic.in/about">About</a> */}
-                <Link to="/about">About</Link>
+                <Link to="/about" onClick={() => setIsMenuOpen(false)}>
+                  About
+                </Link>
               </li>
               <li className="nav-items-mob">
                 <div
@@ -133,7 +152,9 @@ const Header = () => {
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
                   {/* <p>Treatments</p> */}
-                  <Link to="/treatments">Treatments</Link>
+                  <Link to="/therapies" onClick={() => setIsMenuOpen(false)}>
+                    Treatments
+                  </Link>
                   <span>
                     <img src={dropdownArrow} alt="arrow" />
                   </span>
@@ -143,9 +164,14 @@ const Header = () => {
                     {treatments.map((treatment) => {
                       return (
                         <li>
-                          <Link to={`/treatment/${treatment._id}`}>
-                            {treatment.name}
-                          </Link>
+                          <button
+                            className="bg-green-300 text-white rounded-md hover:bg-green-900 transition w-full"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            <Link to={`/treatment/${treatment._id}`}>
+                              {treatment.name}
+                            </Link>
+                          </button>
                         </li>
                       );
                     })}
@@ -153,17 +179,25 @@ const Header = () => {
                 )}
               </li>
               <li className="nav-items-mob">
-                <Link to="/doctors">Doctors</Link>
+                <Link to="/doctors" onClick={() => setIsMenuOpen(false)}>
+                  Doctors
+                </Link>
               </li>
               <li className="nav-items-mob">
-                <Link to="/career">Career</Link>
+                <Link to="/career" onClick={() => setIsMenuOpen(false)}>
+                  Career
+                </Link>
               </li>
               <li className="nav-items-mob">
-                <Link to="/contact">Contact</Link>
+                <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
+                  Contact
+                </Link>
               </li>
               <li className="nav-items-mob">
                 <button className="book-appoinment-btn bg-blue-500 text-white px-4 py-2 rounded-md">
-                  <Link to="/booking">Book Appointment</Link>
+                  <Link to="/booking" onClick={() => setIsMenuOpen(false)}>
+                    Book Appointment
+                  </Link>
                 </button>
               </li>
             </ul>

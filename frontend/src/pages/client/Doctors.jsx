@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import doctorsBg from "../../assets/images/png/doctors-bg.png";
 import greenLeaves from "../../assets/images/png/leaf.webp";
+import { BaseURL } from "../../BaseUrl";
 
 import axios from "axios";
 import ImageHelper from "../../services/helper";
@@ -13,7 +14,7 @@ function Doctors() {
     const fetchConsultants = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/consultant/getconsultants"
+          `${BaseURL}/api/consultant/getconsultants`
         );
         //set the consultants data
         setConsultants(response.data);
@@ -28,7 +29,7 @@ function Doctors() {
     const fetchDoctors = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/dutydoctor/getdutydoctors"
+          `${BaseURL}/api/dutydoctor/getdutydoctors`
         );
         console.log(response.data); // Check the structure of the data
         setDutyDoctors(response.data); // Assuming API returns { dutyDoctors: [...] }
@@ -79,6 +80,10 @@ function Doctors() {
                   <div className="doctor-details flex flex-col items-center">
                     <h6 className="mt-10 text-lg">{consultant.name}</h6>
                     <p className="text-sm">{consultant.qualification}</p>
+                    <p className="text-sm">
+                      {consultant.availableDays.join(", ")}
+                    </p>
+                    <p className="text-sm">{consultant.availableTiming}</p>
                   </div>
                 </div>
               ))}

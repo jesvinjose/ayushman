@@ -3,6 +3,7 @@ import greenLeaves from "../../assets/images/png/leaf.webp";
 import bookingBg from "../../assets/images/png/book_appointment_modal_bg.svg";
 import bookingBgMob from "../../assets/images/png/book_appointment_bg_mob_one.png";
 import axios from "axios";
+import { BaseURL } from "../../BaseUrl";
 
 function Booking() {
   const [backgroundImage, setBackgroundImage] = useState(bookingBg);
@@ -70,7 +71,7 @@ function Booking() {
     const fetchTreatments = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/treatment/gettreatments"
+          `${BaseURL}/api/treatment/gettreatments`
         );
         console.log(response.data); // Check the structure of the data
         setTreatments(response.data); // Assuming API returns { treatments: [...] }
@@ -86,7 +87,7 @@ function Booking() {
     const fetchBranch = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/branch/getbranch"
+          `${BaseURL}/api/branch/getbranch`
         );
         setBranch(response.data);
       } catch (error) {
@@ -149,7 +150,7 @@ function Booking() {
   
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/booking/registerbooking",
+        `${BaseURL}/api/booking/registerbooking`,
         formData
       );
   

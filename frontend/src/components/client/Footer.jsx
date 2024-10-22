@@ -3,17 +3,16 @@ import Kottackkal from "../../assets/images/png/footer_kottakkal_hov_bg.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ImageHelper from "../../services/helper";
-
+import { BaseURL } from "../../BaseUrl";
 
 const Footer = () => {
   const [topservices, setTopServices] = useState([]);
-  const [contacts, setContacts] = useState([])
 
   useEffect(() => {
     const fetchTopServices = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/topservice/getalltopservices"
+          `${BaseURL}/api/topservice/getalltopservices`
         );
         console.log(response.data); // Check the structure of the data
         setTopServices(response.data); // Assuming API returns { dutyDoctors: [...] }
@@ -25,23 +24,26 @@ const Footer = () => {
     fetchTopServices();
   }, []);
 
+  const [contacts, setContacts] = useState([]);
+
   useEffect(() => {
     const fetchContacts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/contactdetails/getcontacts"
+          `${BaseURL}/api/contactdetails/getcontacts`
         );
-        console.log(response.data[0],"my image");
-        
-        setContacts(response.data[0]);
+        if (response.data && response.data.length > 0) {
+          setContacts(response.data[0]); // Assuming you need the first contact only
+        } else {
+          console.log("No contacts found");
+        }
       } catch (error) {
         console.error("Error fetching contacts:", error);
       }
     };
+
     fetchContacts();
   }, []);
-
-
 
   return (
     <div className="bg-white">
@@ -49,75 +51,91 @@ const Footer = () => {
         <ul className="footer-content-section flex flex-col md:flex-row justify-between px-0 space-y-8 md:space-y-0">
           {/* Logo and Contact Info Section */}
           <li className="footer-section-item space-y-4">
-            <a href="/">
-              {/* <img
-                src="http://www.ayushmanayurvedic.in/assets/images/svg/footer_logo.svg"
-                alt="footer logo"
-                className="h-10"
-              /> */}
-              <ImageHelper image={contacts.image} size="100px" 
-              />
-            </a>
+            <Link to="/">
+              {contacts?.image ? (
+                <ImageHelper
+                  image={contacts.image}
+                  size="80px"
+                  width="80px"
+                  className="w-24"
+                />
+              ) : (
+                <p>Logo</p>
+              )}
+            </Link>
+
             <div className="footer-company-mail flex items-center space-x-2">
               <img
-                src="http://localhost:4000/uploads/images/mail.svg"
+                src={`${BaseURL}/uploads/images/mail.svg`}
                 alt="mail icon"
                 className="h-6"
               />
-              <a
-                href="mailto:${contacts.email}"
+
+              <Link
+                to="mailto:${contacts.email}"
                 className="text-gray-600 hover:text-blue-500"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 {contacts.email}
-              </a>
+              </Link>
             </div>
             <div className="footer-social-media flex space-x-4">
-              <a
-                href={contacts.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="http://localhost:4000/uploads/images/fb.svg"
-                  alt="facebook logo"
-                  className="h-6"
-                />
-              </a>
-              <a
-                href={contacts.twitter}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="http://localhost:4000/uploads/images/x.svg"
-                  alt="x logo"
-                  className="h-6"
-                />
-              </a>
-              <a
-                href={contacts.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="http://localhost:4000/uploads/images/ig.svg"
-                  alt="instagram logo"
-                  className="h-6"
-                />
-              </a>
-              <a
-                href={contacts.linkdin}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="http://localhost:4000/uploads/images/ln.svg"
-                  alt="linkedin logo"
-                  className="h-6"
-                />
-              </a>
+              {contacts?.facebook ? (
+                <Link
+                  to={contacts.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={`${BaseURL}/uploads/images/fb.svg`}
+                    alt="facebook logo"
+                    className="h-6"
+                  />
+                </Link>
+              ) : null}
+
+              {contacts?.twitter ? (
+                <Link
+                  to={contacts.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={`${BaseURL}/uploads/images/x.svg`}
+                    alt="facebook logo"
+                    className="h-6"
+                  />
+                </Link>
+              ) : null}
+
+              {contacts?.instagram ? (
+                <Link
+                  to={contacts.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={`${BaseURL}/uploads/images/ig.svg`}
+                    alt="facebook logo"
+                    className="h-6"
+                  />
+                </Link>
+              ) : null}
+
+              {contacts?.linkdin ? (
+                <Link
+                  to={contacts.linkdin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={`${BaseURL}/uploads/images/ln.svg`}
+                    alt="facebook logo"
+                    className="h-6"
+                  />
+                </Link>
+              ) : null}
             </div>
           </li>
 
@@ -154,7 +172,8 @@ const Footer = () => {
       {/* Copyright Section */}
       <div className="footer-copy-right bg-gray-100 py-4 text-center text-sm text-gray-500">
         <p>
-          © Copyright {new Date().getFullYear()} Ayushman Ayurveda{" "}
+          © Copyright {new Date().getFullYear()} Green Leaf
+          Ayurveda Wellness Centre{" "}
           <span>|</span> Design:
           <Link
             to="https://dashing-naiad-4b4d23.netlify.app/"

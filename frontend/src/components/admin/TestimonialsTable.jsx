@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+
+import { BaseURL } from "../../BaseUrl";
 import ImageHelper from "../../services/helper";
 
 const TestimonialsTable = () => {
@@ -21,7 +23,7 @@ const TestimonialsTable = () => {
     const fetchTestimonials = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/testimonial/gettestimonials"
+          `${BaseURL}/api/testimonial/gettestimonials`
         );
         setTestimonials(response.data);
         setFilteredTestimonials(response.data);
@@ -62,7 +64,7 @@ const TestimonialsTable = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/testimonial/addtestimonial",
+          `${BaseURL}/api/testimonial/addtestimonial`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -94,7 +96,7 @@ const TestimonialsTable = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:4000/api/testimonial/deletetestimonial/${id}`
+        `${BaseURL}/api/testimonial/deletetestimonial/${id}`
       );
       setTestimonials(
         testimonials.filter((testimonial) => testimonial._id !== id)

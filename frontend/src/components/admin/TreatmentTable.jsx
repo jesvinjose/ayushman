@@ -4,6 +4,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
+
+import { BaseURL } from "../../BaseUrl";
 import ImageHelper from "../../services/helper";
 
 const TreatmentTable = () => {
@@ -29,7 +31,7 @@ const TreatmentTable = () => {
     const fetchTreatments = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/treatment/gettreatments"
+          `${BaseURL}/api/treatment/gettreatments`
         );
         setTreatments(response.data);
         setFilteredTreatments(response.data);
@@ -80,7 +82,7 @@ const TreatmentTable = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/treatment/addtreatment",
+          `${BaseURL}/api/treatment/addtreatment`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -109,7 +111,7 @@ const TreatmentTable = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:4000/api/treatment/deletetreatment/${id}`
+        `${BaseURL}/api/treatment/deletetreatment/${id}`
       );
       setTreatments(treatments.filter((treatment) => treatment._id !== id));
     } catch (error) {
@@ -149,7 +151,7 @@ const TreatmentTable = () => {
           formData.append("bigImage", newTreatmentBigImage);
         }
         const response = await axios.put(
-          `http://localhost:4000/api/treatment/updatetreatment/${currentTreatment._id}`,
+          `${BaseURL}/api/treatment/updatetreatment/${currentTreatment._id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },

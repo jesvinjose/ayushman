@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { BaseURL } from "../../BaseUrl";
 function Login() {
   // State to store email and password
   const [email, setEmail] = useState("");
@@ -16,14 +16,13 @@ function Login() {
 
     try {
       // Make an Axios POST request to your backend API
-      const response = await axios.post('http://localhost:4000/api/admin/adminlogin', {
+      const response = await axios.post(`${BaseURL}/api/admin/adminlogin`, {
         email: email,
         password: password,
       });
 
       // Handle the response from the backend
       if (response.data.message === 'Valid Admin') {
-
         // You can save the token to local storage or handle it as needed
         localStorage.setItem('token', response.data.token);
         navigate('/dashboard')

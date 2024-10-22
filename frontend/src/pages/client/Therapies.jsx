@@ -3,6 +3,7 @@ import greenLeaves from "../../assets/images/png/leaf.webp";
 import { Link } from "react-router-dom";
 import ImageHelper from "../../services/helper";
 import axios from "axios";
+import { BaseURL } from "../../BaseUrl";
 
 function Therapies() {
   const [treatments, setTreatments] = useState([]);
@@ -13,7 +14,7 @@ function Therapies() {
     const fetchTreatments = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/treatment/gettreatments"
+          `${BaseURL}/api/treatment/gettreatments`
         );
         console.log(response.data); // Check the structure of the data
         setTreatments(response.data); // Assuming API returns { treatments: [...] }
@@ -26,7 +27,7 @@ function Therapies() {
 
   const getSingleTreatment=async(id)=>{
     try {
-      const response=axios.get(`http://localhost:4000/api/treatment/getsingletreatment/${id}`);
+      const response=axios.get(`${BaseURL}/api/treatment/getsingletreatment/${id}`);
       console.log(response.data); // Check the structure of the data
       setSingleTreatment(response.data); // Assuming API returns { treatments: [...] }
     } catch (error) {

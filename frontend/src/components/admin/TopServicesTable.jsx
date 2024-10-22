@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+import { BaseURL } from "../../BaseUrl";
+
 const TopServicesTable = () => {
   const [treatments, setTreatments] = useState([]);
   const [topservices, setTopServices] = useState([]);
@@ -19,7 +21,7 @@ const TopServicesTable = () => {
     const fetchTreatments = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/treatment/gettreatments"
+          `${BaseURL}/api/treatment/gettreatments`
         );
         setTreatments(response.data);
       } catch (error) {
@@ -34,7 +36,7 @@ const TopServicesTable = () => {
     const fetchTopServices = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/topservice/getalltopservices"
+          `${BaseURL}/api/topservice/getalltopservices`
         );
         console.log(response.data); // Check the structure of the data
         setTopServices(response.data); // Assuming API returns { dutyDoctors: [...] }
@@ -69,7 +71,7 @@ const TopServicesTable = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/topservice/addtotopservices",
+          `${BaseURL}/api/topservice/addtotopservices`,
           topServiceData, // Send the JSON object instead of FormData
           {
             headers: { "Content-Type": "application/json" },
@@ -100,7 +102,7 @@ const TopServicesTable = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:4000/api/topservice/deletetopservice/${id}`
+        `${BaseURL}/api/topservice/deletetopservice/${id}`
       );
       setTopServices(topservices.filter((topservice) => topservice._id !== id));
     } catch (error) {

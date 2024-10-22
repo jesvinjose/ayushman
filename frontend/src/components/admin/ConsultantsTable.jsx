@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ImageHelper from "../../services/helper";
+import { BaseURL } from "../../BaseUrl";
 
 const ConsultantsTable = () => {
   const [consultants, setConsultants] = useState([]);
@@ -10,6 +11,8 @@ const ConsultantsTable = () => {
   const [newConsultantQualification, setNewConsultantQualification] =
     useState("");
   const [newConsultantImage, setNewConsultantImage] = useState(null);
+  const [newAvailableDays, setNewAvailableDays] = useState([]);
+  const [newAvailableTiming, setNewAvailableTiming] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [currentConsultant, setCurrentConsultant] = useState(null);
@@ -20,11 +23,32 @@ const ConsultantsTable = () => {
 
   const [filteredConsultants, setFilteredConsultants] = useState([]);
 
+  const allAvailableDays = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  // Handle checkbox changes
+  const handleAvailableDaysChange = (day) => {
+    if (newAvailableDays.includes(day)) {
+      // Remove the day from the array if already selected
+      setNewAvailableDays(newAvailableDays.filter((d) => d !== day));
+    } else {
+      // Add the day to the array if not selected
+      setNewAvailableDays([...newAvailableDays, day]);
+    }
+  };
+
   useEffect(() => {
     const fetchConsultants = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/consultant/getconsultants"
+          `${BaseURL}/api/consultant/getconsultants`
         );
         setConsultants(response.data);
         setFilteredConsultants(response.data);
@@ -49,21 +73,47 @@ const ConsultantsTable = () => {
     setCurrentPage(1); // Reset to first page on search
   };
 
+  useEffect(() => {
+    setFilteredConsultants(consultants);
+  }, [consultants]); // Re-run effect when consultants
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset to the first page if consultants change
+  }, [filteredConsultants]);
+
   const handleImageUpload = (e) => {
-    setNewConsultantImage(e.target.files[0]);
+    // setNewConsultantImage(e.target.files[0]);
+    const file = e.target.files[0];
+    // Add basic validation if needed
+    if (file && file.type.startsWith("image/")) {
+      setNewConsultantImage(file);
+    } else {
+      alert("Please upload a valid image file.");
+    }
   };
 
   const handleAddConsultant = async () => {
     setShowEditForm(false);
-    if (newConsultantName && newConsultantQualification && newConsultantImage) {
+    if (
+      newConsultantName &&
+      newConsultantQualification &&
+      newConsultantImage &&
+      newAvailableDays &&
+      newAvailableTiming
+    ) {
       const formData = new FormData();
       formData.append("name", newConsultantName);
       formData.append("qualification", newConsultantQualification);
       formData.append("image", newConsultantImage);
+      // Add each available day to the form data array
+      newAvailableDays.forEach((day) => {
+        formData.append("availableDays[]", day);
+      });
+      formData.append("availableTiming", newAvailableTiming);
 
       try {
         const response = await axios.post(
-          "http://localhost:4000/api/consultant/addconsultant",
+          `${BaseURL}/api/consultant/addconsultant`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -74,10 +124,7 @@ const ConsultantsTable = () => {
           const addedConsultant = response.data.consultant;
 
           setConsultants([...consultants, addedConsultant]);
-          setNewConsultantName("");
-          setNewConsultantQualification("");
-          setNewConsultantImage(null);
-          setShowAddForm(false);
+          resetForm();
         }
       } catch (error) {
         console.error("Error adding consultant:", error);
@@ -89,9 +136,7 @@ const ConsultantsTable = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(
-        `http://localhost:4000/api/consultant/deleteconsultant/${id}`
-      );
+      await axios.delete(`${BaseURL}/api/consultant/deleteconsultant/${id}`);
       setConsultants(consultants.filter((consultant) => consultant._id !== id));
     } catch (error) {
       console.error("Error deleting consultant:", error);
@@ -99,17 +144,24 @@ const ConsultantsTable = () => {
   };
 
   const handleCancel = () => {
-    setCurrentConsultant(null);
-    setShowEditForm(false);
-    setNewConsultantName("");
-    setNewConsultantQualification("");
-    setNewConsultantImage(null);
+    resetForm();
   };
 
   const handleEdit = (consultant) => {
     setCurrentConsultant(consultant);
     setShowEditForm(true);
     setShowAddForm(false);
+  };
+
+  const resetForm = () => {
+    setNewConsultantName("");
+    setNewConsultantQualification("");
+    setNewConsultantImage(null);
+    setNewAvailableDays([]);
+    setNewAvailableTiming("");
+    setShowAddForm(false);
+    setShowEditForm(false);
+    setCurrentConsultant(null);
   };
 
   const handleUpdateConsultant = async () => {
@@ -121,13 +173,24 @@ const ConsultantsTable = () => {
         newConsultantQualification || currentConsultant.qualification
       );
 
+      // Add available days (as individual form data fields)
+      newAvailableDays.forEach((day) => {
+        formData.append("availableDays", day); // Removed "availableDays[]"
+      });
+
+      // Add available timing
+      formData.append(
+        "availableTiming",
+        newAvailableTiming || currentConsultant.availableTiming
+      );
+
       if (newConsultantImage) {
         formData.append("image", newConsultantImage);
       }
 
       try {
         const response = await axios.put(
-          `http://localhost:4000/api/consultant/updateconsultant/${currentConsultant._id}`,
+          `${BaseURL}/api/consultant/updateconsultant/${currentConsultant._id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -137,19 +200,16 @@ const ConsultantsTable = () => {
         if (response.status === 200) {
           const updatedConsultant = response.data.consultant;
 
-          setConsultants(
-            consultants.map((consultant) =>
+          // Update the consultants array with the updated consultant
+          setConsultants((prevConsultants) =>
+            prevConsultants.map((consultant) =>
               consultant._id === updatedConsultant._id
-                ? updatedConsultant
+                ? { ...consultant, ...updatedConsultant } // Merge updated fields
                 : consultant
             )
           );
 
-          setCurrentConsultant(null);
-          setShowEditForm(false);
-          setNewConsultantName("");
-          setNewConsultantQualification("");
-          setNewConsultantImage(null);
+          resetForm();
         }
       } catch (error) {
         console.error("Error updating consultant:", error);
@@ -218,6 +278,30 @@ const ConsultantsTable = () => {
             className="border p-2 w-full mb-4"
             accept="image/*"
           />
+          {/* Available Days Checkboxes */}
+          <div className="mb-4">
+            <h4>Select Available Days:</h4>
+            {allAvailableDays.map((day) => (
+              <label key={day} className="block">
+                <input
+                  type="checkbox"
+                  value={day}
+                  checked={newAvailableDays.includes(day)}
+                  onChange={() => handleAvailableDaysChange(day)}
+                />
+                {day}
+              </label>
+            ))}
+          </div>
+
+          <input
+            type="text"
+            placeholder="Available Timing"
+            value={newAvailableTiming}
+            onChange={(e) => setNewAvailableTiming(e.target.value)}
+            className="border p-2 w-full mb-4"
+          />
+
           <button
             onClick={handleAddConsultant}
             className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
@@ -250,6 +334,36 @@ const ConsultantsTable = () => {
             className="border p-2 w-full mb-4"
             accept="image/*"
           />
+
+          {/* Available Days Checkboxes */}
+          <div className="mb-4">
+            <h4>Select Available Days:</h4>
+            {allAvailableDays.map((day, index) => (
+              <label key={day} className="block">
+                <input
+                  type="checkbox"
+                  value={day}
+                  checked={
+                    newAvailableDays.length > 0
+                      ? newAvailableDays.includes(day) // Check if the day is selected in the edited form
+                      : currentConsultant.availableDays.includes(day) // Check if the day was previously selected
+                  }
+                  onChange={() => handleAvailableDaysChange(day)} // Handle selection
+                />
+                {day}
+              </label>
+            ))}
+          </div>
+
+          {/* Available Timing Input */}
+          <input
+            type="text"
+            placeholder={currentConsultant.availableTiming} // Placeholder shows original timing
+            value={newAvailableTiming} // Controlled input shows new timing
+            onChange={(e) => setNewAvailableTiming(e.target.value)}
+            className="border p-2 w-full mb-4"
+          />
+
           <button
             onClick={handleUpdateConsultant}
             className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
@@ -271,7 +385,9 @@ const ConsultantsTable = () => {
             <th className="border px-4 py-2 text-left">Image</th>
             <th className="border px-4 py-2 text-left">Name</th>
             <th className="border px-4 py-2 text-left">Qualification</th>
-            <th className="border px-4 py-2 text-left">Actions</th>
+            <th className="border px-4 py-2 text-left">Available Days</th>
+            <th className="border px-4 py-2 text-left">Available Timing</th>
+            <th className="border px-4 py-2 text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -283,18 +399,24 @@ const ConsultantsTable = () => {
               <td className="border px-4 py-2">{consultant.name}</td>
               <td className="border px-4 py-2">{consultant.qualification}</td>
               <td className="border px-4 py-2">
-                <button
-                  onClick={() => handleEdit(consultant)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(consultant._id)}
-                  className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 ml-2"
-                >
-                  Delete
-                </button>
+                {consultant.availableDays.join(", ")}
+              </td>
+              <td className="border px-4 py-2">{consultant.availableTiming}</td>
+              <td className="border px-4 py-2 text-center">
+                <div className="flex flex-col space-y-2 items-center">
+                  <button
+                    onClick={() => handleEdit(consultant)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(consultant._id)}
+                    className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

@@ -12,20 +12,20 @@ const contactDetailsSchema = mongoose.Schema(
     },
     instagram: {
       type: String,
-      required: true,
+      // required: true,
     },
 
     facebook: {
         type: String,
-        required: true,
+        // required: true,
       },
       twitter: {
         type: String,
-        required: true,
+        // required: true,
       },
       linkdin: {
         type: String,
-        required: true,
+        // required: true,
       },
   }
   

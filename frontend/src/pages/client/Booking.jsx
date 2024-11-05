@@ -86,9 +86,7 @@ function Booking() {
   useEffect(() => {
     const fetchBranch = async () => {
       try {
-        const response = await axios.get(
-          `${BaseURL}/api/branch/getbranch`
-        );
+        const response = await axios.get(`${BaseURL}/api/branch/getbranch`);
         setBranch(response.data);
       } catch (error) {
         console.error("Error fetching branches:", error);
@@ -145,15 +143,15 @@ function Booking() {
   // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     console.log(formData);
-  
+
     try {
       const response = await axios.post(
         `${BaseURL}/api/booking/registerbooking`,
         formData
       );
-  
+
       // Handle successful booking registration
       alert(response.data.message);
       console.log("Booking registered successfully:", response.data);
@@ -179,7 +177,7 @@ function Booking() {
       console.error("Error submitting form:", error);
     }
   };
-  
+
   return (
     <div className="treatments-bg bg bg-gray-200">
       {/* Heading Section */}
@@ -394,6 +392,7 @@ function Booking() {
         </div>
       </div>
     </div>
+
   );
 }
 

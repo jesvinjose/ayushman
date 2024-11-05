@@ -29,9 +29,6 @@ function Home() {
   const [backgroundImage, setBackgroundImage] = useState(bookingBg);
   const [franchiseBackgroundImage, setFranchiseBackgroundImage] =
     useState(franchiseBg);
-  
-
-  
 
   // Function to update the background image based on screen size
   const updateBackgroundImage = () => {
@@ -96,9 +93,7 @@ function Home() {
   useEffect(() => {
     const fetchBranch = async () => {
       try {
-        const response = await axios.get(
-          `${BaseURL}/api/branch/getbranch`
-        );
+        const response = await axios.get(`${BaseURL}/api/branch/getbranch`);
         setBranch(response.data);
       } catch (error) {
         console.error("Error fetching branches:", error);
@@ -283,7 +278,8 @@ function Home() {
                 Wellness
               </p>
               <p className="text-[14px] text-[#454545] text-center pt-2 pb-3 mb-4">
-              Green Leaf Ayurveda Wellness centers are unique <br /> ayurvedic treatment centers.
+                Green Leaf Ayurveda Wellness centers are unique <br /> ayurvedic
+                treatment centers.
               </p>
             </div>
           </div>
@@ -356,19 +352,20 @@ function Home() {
             {/* Left Section - Text Content */}
             <div className="bg-white shadow rounded-lg flex flex-col justify-center p-6 w-full h-auto lg:flex-1">
               <h1 className="text-green-800 font-bold text-2xl lg:text-3xl mb-4">
-                Welcome to Green Leaf<br /> Ayurveda Wellness Centre
+                Welcome to Green Leaf
+                <br /> Ayurveda Wellness Centre
               </h1>
               <p className="text-gray-700 text-sm lg:text-base">
-              Green Leaf Ayurveda Wellness centres are unique ayurvedic treatment centres with
-                excellent facilities for rendering all kinds of Ayurvedic
-                treatments. Eminent doctors as well as trained paramedical staff
-                provide maximum care to the customers. Our centres offer expert
-                consultation services by experienced ayurvedic doctors.
-                Treatments are available for various ailments like Arthritis,
-                Rheumatoid Arthritis, Ulcer, Sinusitis, Skin diseases, and other
-                general illnesses. Our clinics are also a unique storehouse of
-                Ayurvedic Kashayas, Arishtas, Lehyas, Ghrithams, Choornams, and
-                other authentic medicines.
+                Green Leaf Ayurveda Wellness centres are unique ayurvedic
+                treatment centres with excellent facilities for rendering all
+                kinds of Ayurvedic treatments. Eminent doctors as well as
+                trained paramedical staff provide maximum care to the customers.
+                Our centres offer expert consultation services by experienced
+                ayurvedic doctors. Treatments are available for various ailments
+                like Arthritis, Rheumatoid Arthritis, Ulcer, Sinusitis, Skin
+                diseases, and other general illnesses. Our clinics are also a
+                unique storehouse of Ayurvedic Kashayas, Arishtas, Lehyas,
+                Ghrithams, Choornams, and other authentic medicines.
               </p>
               <div className="mt-6">
                 <Link
@@ -704,9 +701,12 @@ function Home() {
         </div>
       </div>
 
+      {/* Booking Form Section */}
       <div
         style={{
           paddingLeft: "35px",
+          paddingRight: "35px",
+          paddingBottom: "35px",
         }}
       >
         <div

@@ -4,7 +4,7 @@ const addConsultant = async (req, res) => {
   try {
     const { name, qualification, availableDays, availableTiming } = req.body;
 
-    console.log(req.body, "<------------req.body");
+    // console.log(req.body, "<------------req.body");
 
     // Check if an image file was uploaded
     if (!req.file) {
